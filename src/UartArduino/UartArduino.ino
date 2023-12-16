@@ -48,10 +48,15 @@ void loop() {
     }
   }
 
+  Serial.print("started = ");
+  Serial.println(started);
+  Serial.print("ended = ");
+  Serial.println(ended);
+
   // Reset per i prossimi pacchetti
   if(started && ended) {
     Temperatura = word(byte(inData[1]), byte(inData[0]));
-
+    Serial.print("temperature = ");
     Serial.println(Temperatura);
 
     started = false;
@@ -61,6 +66,8 @@ void loop() {
   }
 
   Tensione = analogRead(Tens_Pin);
+  Serial.print("tensione = ");
+  Serial.println(Tensione);
   Transmit_Data[0] = Tensione & 0xff;
   Transmit_Data[1] = Tensione >> 8;
   
