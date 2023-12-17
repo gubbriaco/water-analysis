@@ -82,7 +82,11 @@ void loop() {
   dataTransmitted[0] = ack & 0xff;
   dataTransmitted[1] = ack >> 8;
   uartSerial.write(dataTransmitted, 2);
-
+  
+  // if(bluetoothSerial.available() > 0) {
+  //   bluetoothSerial.print(temperature);
+  //   bluetoothSerial.print('\n');
+  // }
   delay(1000);
 
 }
