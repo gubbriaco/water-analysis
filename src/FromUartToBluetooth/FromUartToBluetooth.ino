@@ -1,30 +1,35 @@
+#include <SoftwareSerial.h>
+#include <AltSoftSerial.h>
+
+
 #define SOP '<'
 #define EOP '>'
 #define LENGTH 5
 
-#include <SoftwareSerial.h>
-#define UART_TX_PIN 11
-#define UART_RX_PIN 10
-SoftwareSerial uartSerial(UART_RX_PIN, UART_TX_PIN); //RX, TX
+#define UART_TX_PIN 9
+#define UART_RX_PIN 8
+AltSoftSerial uartSerial;
 
-#define BT_TX_PIN 9
-#define BT_RX_PIN 8
-SoftwareSerial bluetoothSerial(BT_RX_PIN, BT_TX_PIN);
-
+#define BT_TX_PIN 11
+#define BT_RX_PIN 10
+SoftwareSerial bluetoothSerial(BT_RX_PIN, BT_TX_PIN); //RX, TX
 
 void setup() {
 
-  pinMode(BT_RX_PIN, INPUT);
-  pinMode(BT_TX_PIN, OUTPUT);
-
   Serial.begin(9600);
+  while (!Serial) {
+  }
+
   uartSerial.begin(9600);
-  //bluetoothSerial.begin(9600);
+  bluetoothSerial.begin(9600);
   
 }
 
 
 void loop() {
+
+  delay(2000);
+
 
   //flag per inizio e fine
   bool started = false;
@@ -33,7 +38,6 @@ void loop() {
   char inData[LENGTH];
   byte index;
   int temperature;
-  byte dataTransmitted[2];
   int ack;
 
 
@@ -78,15 +82,12 @@ void loop() {
     index = 0;
     inData[index] = '\0';
   }
+
   
-  dataTransmitted[0] = ack & 0xff;
-  dataTransmitted[1] = ack >> 8;
-  uartSerial.write(dataTransmitted, 2);
+  bluetoothSerial.print(temperature);
+  bluetoothSerial.print(";");
   
-  // if(bluetoothSerial.available() > 0) {
-  //   bluetoothSerial.print(temperature);
-  //   bluetoothSerial.print('\n');
-  // }
-  delay(1000);
+  
+  delay(20);
 
 }

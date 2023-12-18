@@ -1,9 +1,19 @@
-import asyncio
-from bleak import BleakScanner
+import socket
 
-async def main():
-    devices = await BleakScanner.discover()
-    for d in devices:
-        print(f"device_name:{d.name}, address:{d.address}, RSSI:{d.rssi}, advertisement_data:{d.details}")
 
-asyncio.run(main())
+server = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+server.bind(("98:D3:41:F6:DC:F6", 4))
+server.listen(1)
+
+client, addr = server.accept()
+
+try:
+    while True:
+        data = client.recv(1024)
+        if not data:
+            break
+        print(f"Message: {data.decode('utf-8')}")
+except OSError as e:
+    pass
+
+client.close()

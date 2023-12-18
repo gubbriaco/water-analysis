@@ -4,20 +4,72 @@
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 
+#define SOP '<'
+#define EOP '>'
+#define LENGTH 5
+
 BluetoothSerial SerialBT;
+
 
 void setup() {
   Serial.begin(9600);
-  SerialBT.begin("ESP32"); //Bluetooth device name
-  Serial.println("The device started, now you can pair it with bluetooth!");
+  SerialBT.begin("ESP32");
 }
 
+
 void loop() {
-  if (Serial.available()) {
-    SerialBT.write(Serial.read());
+
+  //flag per inizio e fine
+  bool started = false;
+  bool ended = false;
+
+  char inData[LENGTH];
+  byte index;
+  int temperature;
+  int ack;
+
+
+  while(SerialBT.available() > 0) {
+    char inChar = SerialBT.read();
+    if(inChar == SOP) {
+      index = 0;
+      inData[index] = '\0';
+      started = true;
+      ended = false;
+    }
+    else if(inChar == EOP) {
+      ended = true;
+      break;
+    }
+    else {
+      if(index < LENGTH) {
+        inData[index] = inChar;
+        index++;
+        inData[index] = '\0';
+      }
+    }
   }
-  if (SerialBT.available()) {
-    Serial.write(SerialBT.read());
+
+
+  // Reset per i prossimi pacchetti
+  if(started && ended) {
+    temperature = word(byte(inData[1]), byte(inData[0]));
+    Serial.println(temperature);
+    ack = 1;
+
+    started = false;
+    ended = false;
+    index = 0;
+    inData[index] = '\0';
   }
-  delay(20);
+  else {
+    ack = 0;
+    
+    started = false;
+    ended = false;
+    index = 0;
+    inData[index] = '\0';
+  }
+
+  delay(1000);
 }

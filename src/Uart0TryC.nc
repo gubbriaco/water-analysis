@@ -78,10 +78,6 @@ implementation {
 		// Print temperature data sent
 		printf("Dati inviati = %d\n", Celsius);
 
-		// Combine and print received data from Arduino
-		ArduinoData = receivedData[1] << 8 | receivedData[0];
-		printf("Dati ricevuti = %d\n", ArduinoData);
-
 		// Flush the print buffer
 		printfflush();
 
@@ -112,11 +108,7 @@ implementation {
 		if(call UartStream.send(DataUart, 5) == SUCCESS) {
 			call Leds.led0Toggle();
 		}
-		
-		// Reception: Receive data into receivedData array via UartStream and toggle LED
-		if(call UartStream.receive(receivedData, 2) == SUCCESS) {
-			call Leds.led2Toggle();
-		}
+
 
 	}
 	
