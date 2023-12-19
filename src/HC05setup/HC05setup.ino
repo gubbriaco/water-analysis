@@ -1,7 +1,7 @@
 #include <SoftwareSerial.h>
 
-#define BT_TX_PIN 9
-#define BT_RX_PIN 8
+#define BT_TX_PIN 11
+#define BT_RX_PIN 10
 SoftwareSerial bluetoothSerial(BT_RX_PIN, BT_TX_PIN);
 
 
@@ -9,7 +9,7 @@ char c = ' ';
 void setup() {
   Serial.begin(9600);
   Serial.println("ready");
-  bluetoothSerial.begin(38400);
+  bluetoothSerial.begin(9600);
 
 }
 

@@ -4,72 +4,37 @@
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 
-#define SOP '<'
-#define EOP '>'
-#define LENGTH 5
+BluetoothSerial bluetoothSerial;
 
-BluetoothSerial SerialBT;
-
+// HC-05 MAC address
+// 98:D3:41:F6:DC:F6
+uint8_t hc05_mac_address[] = {0x98,0xD3,0x41,0xF6,0xDC,0xF6};
 
 void setup() {
-  Serial.begin(9600);
-  SerialBT.begin("ESP32");
+  Serial.begin(115200);
+  delay(1000);  // Wait for Serial to initialize - adjust as needed
+
+  bluetoothSerial.begin("ESP32", true); // Bluetooth device name
 }
 
-
 void loop() {
-
-  //flag per inizio e fine
-  bool started = false;
-  bool ended = false;
-
-  char inData[LENGTH];
-  byte index;
-  int temperature;
-  int ack;
-
-
-  while(SerialBT.available() > 0) {
-    char inChar = SerialBT.read();
-    if(inChar == SOP) {
-      index = 0;
-      inData[index] = '\0';
-      started = true;
-      ended = false;
-    }
-    else if(inChar == EOP) {
-      ended = true;
-      break;
-    }
-    else {
-      if(index < LENGTH) {
-        inData[index] = inChar;
-        index++;
-        inData[index] = '\0';
-      }
+  if (!bluetoothSerial.connected()) {
+    // Try to connect to the HC-05 module
+    Serial.println("Connecting to HC-05...");
+    if (bluetoothSerial.connect(hc05_mac_address)) {
+      Serial.println("Connected to HC-05");
+    } else {
+      Serial.println("Failed to connect to HC-05");
+      delay(5000); // Wait before trying to reconnect
+      return;
     }
   }
 
-
-  // Reset per i prossimi pacchetti
-  if(started && ended) {
-    temperature = word(byte(inData[1]), byte(inData[0]));
-    Serial.println(temperature);
-    ack = 1;
-
-    started = false;
-    ended = false;
-    index = 0;
-    inData[index] = '\0';
-  }
-  else {
-    ack = 0;
-    
-    started = false;
-    ended = false;
-    index = 0;
-    inData[index] = '\0';
+  // Example: Reading a byte from BluetoothSerial
+  if (bluetoothSerial.available()) {
+    int temperature = bluetoothSerial.read();
+    Serial.println("Received temperature: " + String(temperature));
   }
 
-  delay(1000);
+  delay(2000);
 }
