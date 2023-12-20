@@ -9,7 +9,7 @@ char c = ' ';
 void setup() {
   Serial.begin(9600);
   Serial.println("ready");
-  bluetoothSerial.begin(9600);
+  bluetoothSerial.begin(38400);
 
 }
 

@@ -38,6 +38,8 @@ void loop() {
   char inData[LENGTH];
   byte index;
   int temperature;
+  byte dataTransmitted[2];
+  int ack;
 
 
   while(uartSerial.available() > 0) {
@@ -64,7 +66,11 @@ void loop() {
 
   if(started && ended) {
     temperature = word(byte(inData[1]), byte(inData[0]));
+    Serial.print("temperature_received = ");
     Serial.println(temperature);
+    ack = 1;
+  } else {
+    ack = 0;
   }
 
   // Reset per i prossimi pacchetti
@@ -72,6 +78,13 @@ void loop() {
   ended = false;
   index = 0;
   inData[index] = '\0';
+
+
+  dataTransmitted[0] = ack & 0xff;
+  dataTransmitted[1] = ack >> 8;
+  uartSerial.write(dataTransmitted, 2);
+  Serial.print("ack_sent = ");
+  Serial.println(ack);
   
 
   bluetoothSerial.print(temperature);
