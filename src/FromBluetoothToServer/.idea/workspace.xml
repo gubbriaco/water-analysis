@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cbbe70c-a7d2-48ba-8805-2ec1156b074e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/DeviceDiscoveredLoggingCallback.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/IncomingMessagesLoggingRunnable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/IrcBluetoothClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/bluetooth/BluetoothReceiver.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/bluetooth/IScanHandler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/bluetooth/Main.java" beforeDir="false" />
-    </list>
+    <list default="true" id="5cbbe70c-a7d2-48ba-8805-2ec1156b074e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,9 +20,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2Zr8tfkRJaRWXZQ25wEyIlJy2e7" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -39,15 +30,19 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Application.BluetoothServer.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "D:/Disco D/universita/magistrale/programmazione-di-sistemi-iot/progetto/src/FromBluetoothToServer",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/utente/Desktop/water-analysis/src/FromBluetoothToServer",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -106,6 +101,13 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-18.0.2-corretto-18.0.2-249ae16d76d6-e0389a16" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -115,10 +117,15 @@
       <option name="presentableId" value="Default" />
       <updated>1703169056429</updated>
       <workItem from="1703169057262" duration="5740000" />
+      <workItem from="1703176479210" duration="5021000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
