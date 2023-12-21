@@ -1,4 +1,4 @@
-package org.water.bluetooth;
+package org.water.bluetooth.application;
 
 import javax.bluetooth.*;
 import javax.microedition.io.Connector;
@@ -7,7 +7,31 @@ import javax.microedition.io.StreamConnectionNotifier;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class BluetoothServer {
+public class BluetoothServerApplication implements BluetoothServer {
+
+    /** I ensure that the class has only one instance and that this instance is easily accessible. Therefore, the class
+     * itself ensures that no other instance can be created and, via the static and synchronized getIstance(), it
+     * provides an easy way to access the only instance created. This technique used is the so-called Lazy
+     * Initialisation.
+     */
+    private static BluetoothServerApplication INSTANCE = null;
+
+    private BluetoothServerApplication() {}
+
+    /**
+     * Allows access to the only instance that can be created of the class. It is made synchronised to guarantee the
+     * atomicity of the creation process in the case of concurrent access of the class.
+     * @return Instance of the class {@link BluetoothServerApplication}
+     */
+    public static synchronized BluetoothServerApplication getIstance() {
+        if(INSTANCE == null)
+            INSTANCE = new BluetoothServerApplication();
+        return INSTANCE;
+    }
+
+    @Override public void start() {
+
+    }
 
     private static String deviceName = "HC05";
 

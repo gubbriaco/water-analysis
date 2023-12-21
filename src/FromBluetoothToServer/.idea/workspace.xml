@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cbbe70c-a7d2-48ba-8805-2ec1156b074e" name="Changes" comment="" />
+    <list default="true" id="5cbbe70c-a7d2-48ba-8805-2ec1156b074e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/BluetoothServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/BluetoothServerApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/DeviceDiscoveredLoggingCallback.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/IncomingMessagesLoggingRunnable.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/IrcBluetoothClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/Main.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,6 +23,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -33,10 +43,11 @@
     "Application.BluetoothServer.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/utente/Desktop/water-analysis/src/FromBluetoothToServer",
+    "last_opened_file_path": "D:/Disco D/universita/magistrale/programmazione-di-sistemi-iot/water-analysis/src/FromBluetoothToServer",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -53,13 +64,13 @@
       <recent name="D:\Disco D\universita\magistrale\programmazione-di-sistemi-iot\progetto\src\FromBluetoothToServer" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.BluetoothServer">
-    <configuration name="BluetoothServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="org.water.bluetooth.BluetoothServer" />
+  <component name="RunManager" selected="Application.BluetoothServerApplication">
+    <configuration name="BluetoothServerApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.water.bluetooth.application.BluetoothServerApplication" />
       <module name="FromBluetoothToServer" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.water.bluetooth.*" />
+          <option name="PATTERN" value="org.water.bluetooth.application.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -72,7 +83,7 @@
       <module name="FromBluetoothToServer" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.water.bluetooth.*" />
+          <option name="PATTERN" value="org.water.bluetooth.application.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -85,7 +96,7 @@
       <module name="FromBluetoothToServer" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.water.bluetooth.*" />
+          <option name="PATTERN" value="org.water.bluetooth.application.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -95,7 +106,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.BluetoothServer" />
+        <item itemvalue="Application.BluetoothServerApplication" />
         <item itemvalue="Application.IrcBluetoothClient" />
         <item itemvalue="Application.Main" />
       </list>
@@ -118,6 +129,7 @@
       <updated>1703169056429</updated>
       <workItem from="1703169057262" duration="5740000" />
       <workItem from="1703176479210" duration="5021000" />
+      <workItem from="1703184829878" duration="2742000" />
     </task>
     <servers />
   </component>
