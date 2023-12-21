@@ -15,11 +15,11 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/com.github.hypfvieh/dbus-java-core -->
+        <!-- https://mvnrepository.com/artifact/io.ultreia/bluecove -->
         <dependency>
-            <groupId>com.github.hypfvieh</groupId>
-            <artifactId>dbus-java-core</artifactId>
-            <version>4.3.1</version>
+            <groupId>io.ultreia</groupId>
+            <artifactId>bluecove</artifactId>
+            <version>2.1.1</version>
         </dependency>
     </dependencies>
 
