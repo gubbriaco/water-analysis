@@ -5,86 +5,93 @@ import org.water.bluetooth.application.utils.Logging;
 import javax.bluetooth.LocalDevice;
 import javax.bluetooth.RemoteDevice;
 import javax.microedition.io.StreamConnection;
+import javax.microedition.io.StreamConnectionNotifier;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class RemoteConnection extends Thread {
 
-    private final LocalDevice localDevice;
-    private final String localDeviceName;
+    LocalDevice localDevice;
 
-    private final RemoteDevice remoteDevice;
-    private final String remoteDeviceName;
-    private final StreamConnection connection;
+    StreamConnection connection;
+    RemoteDevice remoteDevice;
+    String remoteDeviceName;
 
-    private InputStream inputStream;
-    private StringBuilder receivedData;
-
-
-    public RemoteConnection(
-            LocalDevice localDevice,
-            RemoteDevice remoteDevice,
-            StreamConnection connection
-    ) throws IOException {
-
+    public RemoteConnection(LocalDevice localDevice, StreamConnectionNotifier notifier) throws IOException {
         this.localDevice = localDevice;
-        localDeviceName = localDevice.getFriendlyName();
-        if (remoteDevice == null) {
-            throw new IOException();
-        }
-        this.remoteDevice = remoteDevice;
+
+        // The incoming connection is provisionally accepted.
+        this.connection = notifier.acceptAndOpen();
+
+        // The remote device that is trying to establish a Bluetooth connection with the local device is
+        // intercepted.
+        this.remoteDevice = RemoteDevice.getRemoteDevice(connection);
         this.remoteDeviceName = remoteDevice.getFriendlyName(true);
-
-        this.connection = connection;
-
     }
 
 
     @Override public void run() {
-
-        Logging.msg(
-                remoteDeviceName + " connected to " + localDeviceName
-        );
-
         try {
+            // If the remote device is in the list of permitted remote devices then the remote connection is
+            // established, otherwise the established temporary connection is closed.
+            if (true) {
 
-            inputStream = connection.openInputStream();
-            receivedData = new StringBuilder();
-            int character;
+                Logging.msg(
+                        remoteDeviceName + " connected to " + localDevice.getFriendlyName()
+                );
 
-            while ( (character = inputStream.read()) != -1 ) {
-                char receivedChar = (char) character;
+                try {
 
-                // The ; character at the end of the message is excluded.
-                if (receivedChar != ';') {
-                    receivedData.append(receivedChar);
-                }
+                    InputStream inputStream = connection.openInputStream();
+                    StringBuilder receivedData = new StringBuilder();
+                    int character;
 
-                // If the current character is ; then reading of the message is finished and the text can be displayed
-                // on the screen.
-                String data;
-                if ( receivedChar == ';' ) {
-                    data = receivedData.toString().trim();
+                    while ((character = inputStream.read()) != -1) {
+                        char receivedChar = (char) character;
+
+                        // The ; character at the end of the message is excluded.
+                        if (receivedChar != ';') {
+                            receivedData.append(receivedChar);
+                        }
+
+                        // If the current character is ; then reading of the message is finished and the text can be
+                        // displayed on the screen.
+                        String data;
+                        if (receivedChar == ';') {
+                            data = receivedData.toString().trim();
+                            Logging.msg(
+                                    "temperature_received_from_" + remoteDeviceName + ": " + data
+                            );
+                            // Reset buffer for next message
+                            receivedData.setLength(0);
+                        }
+                    }
+
+                    // At the end of the data flow, the connection is closed.
+                    connection.close();
                     Logging.msg(
-                            "temperature_received: " + data
+                            "The connection between " + localDevice + " and " + remoteDevice + " has been closed."
                     );
-                    // Reset buffer for next message
-                    receivedData.setLength(0);
+
+                } catch (IOException e) {
+                    Logging.msg(
+                            "Error during data flow."
+                    );
                 }
+
+            } else {
+
+                Logging.msg(
+                        "Connection refused. Device not recognised: " + remoteDeviceName
+                );
+                connection.close();
+
             }
-
-            // At the end of the data flow, the connection is closed.
-            connection.close();
+        }catch (IOException e) {
             Logging.msg(
-                    "The connection between " +  localDevice + " and " +  remoteDevice + " has been closed."
-            );
-
-        } catch (IOException e) {
-            Logging.msg(
-                    "Error during data flow."
+                    "Remote Connection Error."
             );
         }
     }
-
 
 }

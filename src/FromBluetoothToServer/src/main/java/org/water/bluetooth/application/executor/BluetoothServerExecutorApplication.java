@@ -11,7 +11,6 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class BluetoothServerExecutorApplication implements BluetoothServerExecutor {
 
@@ -42,43 +41,17 @@ public class BluetoothServerExecutorApplication implements BluetoothServerExecut
      */
     @Override public void execute() throws IOException {
 
+        Logging.msg(
+                "Waiting for connections..."
+        );
+
         while ( running ) {
 
-            Logging.msg(
-                    "Waiting for connections..."
+            Thread remoteConnection = new RemoteConnection(
+                    localDevice,
+                    notifier
             );
-
-            // The incoming connection is provisionally accepted.
-            StreamConnection connection = notifier.acceptAndOpen();
-
-            // The remote device that is trying to establish a Bluetooth connection with the local device is
-            // intercepted.
-            RemoteDevice remoteDevice = RemoteDevice.getRemoteDevice(connection);
-            String remoteDeviceName = remoteDevice.getFriendlyName(true);
-
-            // If the remote device is in the list of permitted remote devices then the remote connection is
-            // established, otherwise the established temporary connection is closed.
-            if( true ) {
-
-                Logging.msg(
-                        remoteDeviceName + " connected to " + localDevice.getFriendlyName()
-                );
-
-                Thread remoteConnection = new RemoteConnection(
-                        localDevice,
-                        remoteDevice,
-                        connection
-                );
-                remoteConnection.start();
-
-            } else {
-
-                Logging.msg(
-                        "Connection refused. Device not recognised: " + remoteDeviceName
-                );
-                connection.close();
-
-            }
+            remoteConnection.start();
 
         }
 
