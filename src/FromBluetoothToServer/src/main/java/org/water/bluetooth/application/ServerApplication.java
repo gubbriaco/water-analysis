@@ -6,13 +6,17 @@ import org.water.bluetooth.application.executor.BluetoothServerExecutor;
 import org.water.bluetooth.application.executor.BluetoothServerExecutorApplication;
 import org.water.bluetooth.application.utils.Logging;
 
+/**
+ * Singleton implementation of a Bluetooth server application.
+ * This class provides a single instance of the Bluetooth server and initializes its execution.
+ */
 public class ServerApplication implements Server {
 
-
-    /** I ensure that the class has only one instance and that this instance is easily accessible. Therefore, the class
-     * itself ensures that no other instance can be created and, via the static and synchronized getIstance(), it
-     * provides an easy way to access the only instance created. This technique used is the so-called Lazy
-     * Initialisation.
+    /**
+     * I ensure that the class has only one instance and that this instance is easily accessible. Therefore, the class
+     * itself ensures that no other instance can be created and, via the static and synchronized
+     * {@link ServerApplication#getInstance()}, it provides an easy way to access the only instance created. This
+     * technique used is the so-called Lazy Initialization.
      */
     private static ServerApplication INSTANCE = null;
 
@@ -21,42 +25,43 @@ public class ServerApplication implements Server {
      */
     BluetoothServerExecutor bluetoothServerExecutor;
 
-
     /**
      * The constructor is implemented as private since the instantiation of the {@link ServerApplication} class is
      * obtained via the static {@link ServerApplication#getInstance()} method.
      */
     private ServerApplication() {}
 
-
+    
     /**
-     * Allows access to the only instance that can be created of the class. It is made synchronised to guarantee the
+     * Allows access to the only instance that can be created of the class. It is made synchronized to guarantee the
      * atomicity of the creation process in the case of concurrent access of the class.
+     *
      * @return Instance of the class {@link ServerApplication}
      */
     public static synchronized ServerApplication getInstance() {
-        if(INSTANCE == null)
+        if (INSTANCE == null)
             INSTANCE = new ServerApplication();
         return INSTANCE;
     }
 
 
     /**
-     * Initialises the execution of the Bluetooth server.
+     * Initializes the execution of the Bluetooth server.
      */
-    @Override public void start() {
-        // The execution of the Bluetooth Server is initialised. In the event of an error, the exception is handled.
+    @Override
+    public void start() {
+        // The execution of the Bluetooth Server is initialized. In the event of an error, the exception is handled.
         try {
             bluetoothServerExecutor = new BluetoothServerExecutorApplication();
-        }catch (IOException e) {
+        } catch (IOException e) {
             Logging.msg(
-                    "Bluetooth Server Error Initialisation."
+                    "Bluetooth Server Error Initialization."
             );
         }
         // The execution of the Bluetooth Server is started. In the event of an error, the exception is handled.
         try {
             bluetoothServerExecutor.execute();
-        }catch (IOException e) {
+        } catch (IOException e) {
             Logging.msg(
                     "Bluetooth Server Error Booting."
             );

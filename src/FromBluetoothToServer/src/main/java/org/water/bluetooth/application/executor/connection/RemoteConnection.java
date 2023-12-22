@@ -63,7 +63,7 @@ public class RemoteConnection extends Thread {
     public void run() {
 
         try {
-            
+
             // If the remote device is in the list of permitted remote devices, then the remote connection is
             // established; otherwise, the established temporary connection is closed.
             if (true) {
