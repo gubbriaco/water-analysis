@@ -9,14 +9,40 @@ import javax.microedition.io.StreamConnectionNotifier;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Represents a thread handling an incoming Bluetooth connection request.
+ * This class extends Thread and is designed to be instantiated for each incoming connection.
+ */
 public class RemoteConnection extends Thread {
 
-    LocalDevice localDevice;
+    /**
+     * The local Bluetooth device on which the connection is accepted.
+     */
+    private final LocalDevice localDevice;
 
-    StreamConnection connection;
-    RemoteDevice remoteDevice;
-    String remoteDeviceName;
+    /**
+     * The established stream connection to the remote device.
+     */
+    private final StreamConnection connection;
 
+    /**
+     * The remote Bluetooth device attempting to establish a connection.
+     */
+    private final RemoteDevice remoteDevice;
+
+    /**
+     * The friendly name of the remote Bluetooth device.
+     */
+    private final String remoteDeviceName;
+
+
+    /**
+     * Constructs a new instance of RemoteConnection.
+     *
+     * @param localDevice The local Bluetooth device.
+     * @param notifier    The StreamConnectionNotifier used for accepting incoming connections.
+     * @throws IOException If an I/O error occurs during the connection setup.
+     */
     public RemoteConnection(LocalDevice localDevice, StreamConnectionNotifier notifier) throws IOException {
         this.localDevice = localDevice;
 
@@ -30,10 +56,16 @@ public class RemoteConnection extends Thread {
     }
 
 
-    @Override public void run() {
+    /**
+     * Executes the thread logic for handling the Bluetooth connection.
+     */
+    @Override
+    public void run() {
+
         try {
-            // If the remote device is in the list of permitted remote devices then the remote connection is
-            // established, otherwise the established temporary connection is closed.
+            
+            // If the remote device is in the list of permitted remote devices, then the remote connection is
+            // established; otherwise, the established temporary connection is closed.
             if (true) {
 
                 Logging.msg(
@@ -54,7 +86,7 @@ public class RemoteConnection extends Thread {
                             receivedData.append(receivedChar);
                         }
 
-                        // If the current character is ; then reading of the message is finished and the text can be
+                        // If the current character is ;, then reading of the message is finished, and the text can be
                         // displayed on the screen.
                         String data;
                         if (receivedChar == ';') {
@@ -62,7 +94,7 @@ public class RemoteConnection extends Thread {
                             Logging.msg(
                                     "temperature_received_from_" + remoteDeviceName + ": " + data
                             );
-                            // Reset buffer for next message
+                            // Reset buffer for the next message
                             receivedData.setLength(0);
                         }
                     }
@@ -82,16 +114,18 @@ public class RemoteConnection extends Thread {
             } else {
 
                 Logging.msg(
-                        "Connection refused. Device not recognised: " + remoteDeviceName
+                        "Connection refused. Device not recognized: " + remoteDeviceName
                 );
                 connection.close();
 
             }
-        }catch (IOException e) {
+
+        } catch (IOException e) {
             Logging.msg(
                     "Remote Connection Error."
             );
         }
+
     }
 
 }
