@@ -5,10 +5,8 @@ import org.water.bluetooth.application.utils.Logging;
 import org.water.bluetooth.application.utils.UUIDgenerator;
 
 import javax.bluetooth.LocalDevice;
-import javax.bluetooth.RemoteDevice;
 import javax.bluetooth.UUID;
 import javax.microedition.io.Connector;
-import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
 import java.io.IOException;
 

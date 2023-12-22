@@ -4,7 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5cbbe70c-a7d2-48ba-8805-2ec1156b074e" name="Changes" comment="" />
+    <list default="true" id="5cbbe70c-a7d2-48ba-8805-2ec1156b074e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/ServerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/ServerApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/BluetoothServerExecutorApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/BluetoothServerExecutorApplication.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,7 +45,7 @@
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/utente/Desktop/water-analysis/src/FromBluetoothToServer",
+    "last_opened_file_path": "D:/Disco D/universita/magistrale/programmazione-di-sistemi-iot/water-analysis/src/FromBluetoothToServer",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -127,6 +132,7 @@
       <workItem from="1703261833643" duration="1956000" />
       <workItem from="1703263907700" duration="3760000" />
       <workItem from="1703270650746" duration="1216000" />
+      <workItem from="1703280128809" duration="1340000" />
     </task>
     <servers />
   </component>

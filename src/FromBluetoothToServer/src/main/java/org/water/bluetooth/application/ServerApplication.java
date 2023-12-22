@@ -1,11 +1,6 @@
 package org.water.bluetooth.application;
 
-import javax.bluetooth.*;
-import javax.microedition.io.Connector;
-import javax.microedition.io.StreamConnection;
-import javax.microedition.io.StreamConnectionNotifier;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.water.bluetooth.application.executor.BluetoothServerExecutor;
 import org.water.bluetooth.application.executor.BluetoothServerExecutorApplication;
@@ -22,11 +17,17 @@ public class ServerApplication implements Server {
     private static ServerApplication INSTANCE = null;
 
     /**
-     *
+     * The Bluetooth Server Executor is responsible for booting the Bluetooth Server.
      */
     BluetoothServerExecutor bluetoothServerExecutor;
 
+
+    /**
+     * The constructor is implemented as private since the instantiation of the {@link ServerApplication} class is
+     * obtained via the static {@link ServerApplication#getInstance()} method.
+     */
     private ServerApplication() {}
+
 
     /**
      * Allows access to the only instance that can be created of the class. It is made synchronised to guarantee the
@@ -40,7 +41,11 @@ public class ServerApplication implements Server {
     }
 
 
+    /**
+     * Initialises the execution of the Bluetooth server.
+     */
     @Override public void start() {
+        // The execution of the Bluetooth Server is initialised. In the event of an error, the exception is handled.
         try {
             bluetoothServerExecutor = new BluetoothServerExecutorApplication();
         }catch (IOException e) {
@@ -48,6 +53,7 @@ public class ServerApplication implements Server {
                     "Bluetooth Server Error Initialisation."
             );
         }
+        // The execution of the Bluetooth Server is started. In the event of an error, the exception is handled.
         try {
             bluetoothServerExecutor.execute();
         }catch (IOException e) {
