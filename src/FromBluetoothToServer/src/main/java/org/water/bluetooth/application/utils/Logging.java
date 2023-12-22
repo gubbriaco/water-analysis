@@ -1,5 +1,8 @@
 package org.water.bluetooth.application.utils;
 
+/**
+ * Allows the generation of textual logs for the management of the Bluetooth Server.
+ */
 public class Logging {
 
     /**
