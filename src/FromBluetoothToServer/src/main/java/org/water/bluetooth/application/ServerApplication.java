@@ -31,7 +31,7 @@ public class ServerApplication implements Server {
      */
     private ServerApplication() {}
 
-    
+
     /**
      * Allows access to the only instance that can be created of the class. It is made synchronized to guarantee the
      * atomicity of the creation process in the case of concurrent access of the class.
