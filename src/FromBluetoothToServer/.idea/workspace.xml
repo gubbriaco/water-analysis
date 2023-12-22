@@ -5,15 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5cbbe70c-a7d2-48ba-8805-2ec1156b074e" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/BluetoothServerExecutor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/BluetoothServerExecutorApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/BluetoothServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/BluetoothServerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/ServerApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/BluetoothServerExecutor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/ServerExecutor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/BluetoothServerExecutorApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/BluetoothServerExecutorApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +35,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.BluetoothServer.executor": "Run",
+    "Application.Main.executor": "Run",
     "OverrideImplement.generate.javadoc": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -49,7 +43,7 @@
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "D:/Disco D/universita/magistrale/programmazione-di-sistemi-iot/water-analysis/src/FromBluetoothToServer",
+    "last_opened_file_path": "C:/Users/utente/Desktop/water-analysis/src/FromBluetoothToServer",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -109,7 +103,6 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
-        <item itemvalue="Application.BluetoothServerApplication" />
         <item itemvalue="Application.IrcBluetoothClient" />
       </list>
     </recent_temporary>
@@ -133,6 +126,8 @@
       <workItem from="1703176479210" duration="5021000" />
       <workItem from="1703184829878" duration="3031000" />
       <workItem from="1703240576717" duration="9460000" />
+      <workItem from="1703261790459" duration="23000" />
+      <workItem from="1703261833643" duration="1956000" />
     </task>
     <servers />
   </component>
