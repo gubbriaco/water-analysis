@@ -70,66 +70,65 @@ public class RemoteConnection extends Thread {
             // established; otherwise, the established temporary connection is closed.
             if (true) {
             // if (allowed(remoteDeviceName)) {
+                
+                Logging.msg(
+                        remoteDeviceName + " connected to " + localDevice.getFriendlyName()
+                );
 
-                    Logging.msg(
-                            remoteDeviceName + " connected to " + localDevice.getFriendlyName()
-                    );
+                try {
 
-                    try {
+                    InputStream inputStream = connection.openInputStream();
+                    StringBuilder receivedData = new StringBuilder();
+                    int character;
 
-                        InputStream inputStream = connection.openInputStream();
-                        StringBuilder receivedData = new StringBuilder();
-                        int character;
+                    while ((character = inputStream.read()) != -1) {
+                        char receivedChar = (char) character;
 
-                        while ((character = inputStream.read()) != -1) {
-                            char receivedChar = (char) character;
-
-                            // The ; character at the end of the message is excluded.
-                            if (receivedChar != ';') {
-                                receivedData.append(receivedChar);
-                            }
-
-                            // If the current character is ;, then reading of the message is finished, and the text can be
-                            // displayed on the screen.
-                            String data;
-                            if (receivedChar == ';') {
-                                data = receivedData.toString().trim();
-                                Logging.msg(
-                                        "temperature_received_from_" + remoteDeviceName + ": " + data
-                                );
-                                // Reset buffer for the next message
-                                receivedData.setLength(0);
-
-                                // Performs an HTTP POST request for temperature, dissolved metals, and pH data to a server.
-                                httpPostRequest(data);
-
-                            }
+                        // The ; character at the end of the message is excluded.
+                        if (receivedChar != ';') {
+                            receivedData.append(receivedChar);
                         }
 
-                        // At the end of the data flow, the connection is closed.
-                        connection.close();
-                        Logging.msg(
-                                "The connection between " + localDevice + " and " + remoteDevice + " has been closed."
-                        );
+                        // If the current character is ;, then reading of the message is finished, and the text can be
+                        // displayed on the screen.
+                        String data;
+                        if (receivedChar == ';') {
+                            data = receivedData.toString().trim();
+                            Logging.msg(
+                                    "temperature_received_from_" + remoteDeviceName + ": " + data
+                            );
+                            // Reset buffer for the next message
+                            receivedData.setLength(0);
 
-                    } catch (InterruptedException e) {
-                        Logging.msg(
-                                "Error during HTTP POST Request. \n Interrupted Exception."
-                        );
-                    } catch (IOException e) {
-                        Logging.msg(
-                                "Error during data flow."
-                        );
+                            // Performs an HTTP POST request for temperature, dissolved metals, and pH data to a server.
+                            httpPostRequest(data);
+
+                        }
                     }
 
-                } else {
-
-                    Logging.msg(
-                            "Connection refused. Device not recognized: " + remoteDeviceName
-                    );
+                    // At the end of the data flow, the connection is closed.
                     connection.close();
+                    Logging.msg(
+                            "The connection between " + localDevice + " and " + remoteDevice + " has been closed."
+                    );
 
+                } catch (InterruptedException e) {
+                    Logging.msg(
+                            "Error during HTTP POST Request. \n Interrupted Exception."
+                    );
+                } catch (IOException e) {
+                    Logging.msg(
+                            "Error during data flow."
+                    );
                 }
+
+            } else {
+
+                Logging.msg(
+                        "Connection refused. Device not recognized: " + remoteDeviceName
+                );
+                connection.close();
+
             }
 
         } catch (IOException e) {

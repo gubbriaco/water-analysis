@@ -145,7 +145,7 @@ public class HTTPPOST extends Thread {
     private String getEndPointURL(String endPoint) {
 
         return "https://example.com/api/" + endPoint;
-        
+
     }
 
 }
