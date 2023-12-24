@@ -15,7 +15,7 @@ import java.util.Properties;
 public class Connection {
 
     /**
-     * This utility, by consulting the resource {@see config.properties}, checks whether or not the remote device that
+     * This utility, by consulting the resource {@link config.properties}, checks whether or not the remote device that
      * wants to establish Bluetooth communication with the local device is actually allowed.
      * @param remoteDeviceName Name of the remote device that wants to establish a Bluetooth connection with the local
      *                         device.
