@@ -10,6 +10,8 @@ import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Represents a thread handling an incoming Bluetooth connection request.
@@ -70,7 +72,7 @@ public class RemoteConnection extends Thread {
             // established; otherwise, the established temporary connection is closed.
             if (true) {
             // if (allowed(remoteDeviceName)) {
-                
+
                 Logging.msg(
                         remoteDeviceName + " connected to " + localDevice.getFriendlyName()
                 );
@@ -94,14 +96,35 @@ public class RemoteConnection extends Thread {
                         String data;
                         if (receivedChar == ';') {
                             data = receivedData.toString().trim();
-                            Logging.msg(
-                                    "temperature_received_from_" + remoteDeviceName + ": " + data
-                            );
+                            // Split the received data into individual values
+                            String[] values = data.split(",");
+                            // Check if the array has at least three elements
+                            if (values.length >= 3) {
+                                String temperature = values[0];
+                                String dissolvedMetals = values[1];
+                                String ph = values[2];
+
+                                // Get current date and time
+                                LocalDateTime currentTime = LocalDateTime.now();
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+                                // Print the formatted output with current date and time
+                                Logging.msg("");
+                                Logging.msg("....................................................................");
+                                Logging.msg(currentTime.format(formatter));
+                                Logging.msg("#  Temperature = " + temperature + " Celsius");
+                                Logging.msg("#  Dissolved Metals =" + dissolvedMetals + " PPM");
+                                Logging.msg(" |--> " + getDissolvedMetalsDetails(dissolvedMetals));
+                                Logging.msg("#  pH = " + ph);
+                                Logging.msg(" |--> " + getPhDetails(ph));
+                            } else {
+                                Logging.msg("Invalid data format: " + data);
+                            }
                             // Reset buffer for the next message
                             receivedData.setLength(0);
 
                             // Performs an HTTP POST request for temperature, dissolved metals, and pH data to a server.
-                            httpPostRequest(data);
+                            //httpPostRequest(data);
 
                         }
                     }
@@ -112,10 +135,10 @@ public class RemoteConnection extends Thread {
                             "The connection between " + localDevice + " and " + remoteDevice + " has been closed."
                     );
 
-                } catch (InterruptedException e) {
-                    Logging.msg(
-                            "Error during HTTP POST Request. \n Interrupted Exception."
-                    );
+//                } catch (InterruptedException e) {
+//                    Logging.msg(
+//                            "Error during HTTP POST Request. \n Interrupted Exception."
+//                    );
                 } catch (IOException e) {
                     Logging.msg(
                             "Error during data flow."
@@ -154,7 +177,6 @@ public class RemoteConnection extends Thread {
             IOException,
             InterruptedException,
             IllegalArgumentException {
-
         String temperature = getTemperature(data);
         String dissolvedMetals = getDissolvedMetals(data);
         String ph = getPh(data);
@@ -173,7 +195,6 @@ public class RemoteConnection extends Thread {
         temperatureHttpPost.join();
         dissolvedMetalsHttpPost.join();
         phHttpPost.join();
-
     }
 
 
@@ -186,14 +207,12 @@ public class RemoteConnection extends Thread {
      * @throws IllegalArgumentException If the provided data string does not contain valid temperature data.
      */
     private String getTemperature(String data) throws IllegalArgumentException {
-
         String[] values = data.split("[,;]");
         if (values.length > 0) {
             return values[0];
         } else {
             throw new IllegalArgumentException("Illegal temperature data: " + data);
         }
-
     }
 
 
@@ -205,14 +224,12 @@ public class RemoteConnection extends Thread {
      * @throws IllegalArgumentException If the provided data string does not contain valid dissolved metals data.
      */
     private String getDissolvedMetals(String data) {
-
         String[] values = data.split("[,;]");
         if (values.length > 1) {
             return values[1];
         } else {
             throw new IllegalArgumentException("Illegal dissolved metals data: " + data);
         }
-
     }
 
 
@@ -224,14 +241,95 @@ public class RemoteConnection extends Thread {
      * @throws IllegalArgumentException If the provided data string does not contain valid pH data.
      */
     private String getPh(String data) {
-
         String[] values = data.split("[,;]");
         if (values.length > 2) {
             return values[2];
         } else {
             throw new IllegalArgumentException("Illegal pH data: " + data);
         }
-
     }
+
+
+    /**
+     * Determines the dissolved metals details based on the provided dissolved metals value.
+     *
+     * @param dissolvedMetalsString The dissolved metals value as a string.
+     * @return Details about the dissolved metals, such as water quality information.
+     * @throws IllegalArgumentException If the provided dissolved metals value is invalid or out of range.
+     */
+    private String getDissolvedMetalsDetails(String dissolvedMetalsString) throws IllegalArgumentException {
+        float dissolvedMetals = Float.parseFloat(dissolvedMetalsString);
+        String details = "";
+
+        if (dissolvedMetals >= 0 && dissolvedMetals < 200) {
+            details += "Hard water.";
+        } else if (dissolvedMetals >= 200 && dissolvedMetals < 400) {
+            details += "Average tap water.";
+        }
+
+        if (dissolvedMetals >= 0 && dissolvedMetals < 50) {
+            return details + "Ideal drinking water from reverse osmosis, deionization, microfiltration, distillation, etc.";
+        } else if (dissolvedMetals >= 50 && dissolvedMetals < 200) {
+            return details + "Carbon filtration, mountain springs or aquifers.";
+        } else if (dissolvedMetals >= 200 && dissolvedMetals < 300) {
+            return details + "Marginally acceptable.";
+        } else if (dissolvedMetals >= 300 && dissolvedMetals < 500) {
+            return details + "High TDS water from the tap or mineral springs.";
+        } else if (dissolvedMetals >= 500) {
+            return details + "U.S. EPA's maximum contamination level.";
+        }
+
+        throw new IllegalArgumentException("Invalid dissolved metals value: " + dissolvedMetalsString);
+    }
+
+
+    /**
+     * Determines the pH details based on the provided pH value.
+     *
+     * @param pHString The pH value as a string.
+     * @return Details about the pH, such as acidity or alkalinity, and equivalent substances.
+     * @throws IllegalArgumentException If the provided pH value is invalid or out of range.
+     */
+    private String getPhDetails(String pHString) throws IllegalArgumentException {
+        float pH = Float.parseFloat(pHString);
+        String details = "";
+
+        if (pH >= 0 && pH < 7) {
+            details += "Acid.";
+        } else if (pH >= 7 && pH < 7.5) {
+            details += "Neutral.";
+        } else if (pH >= 7.5 && pH <= 14) {
+            details += "Base.";
+        }
+
+        details += "Equivalent to ";
+
+        if (pH >= 0 && pH < 1) {
+            return details + "battery acid.";
+        } else if (pH >= 1.0 && pH < 3.3) {
+            return details + "gastric acid";
+        } else if (pH >= 3.3 && pH < 4.2) {
+            return details + "orange juice.";
+        } else if (pH >= 4.2 && pH < 5) {
+            return details + "vinegar.";
+        } else if (pH >= 5 && pH < 5.03) {
+            return details + "black coffee.";
+        } else if (pH >= 5.03 && pH < 6.8) {
+            return details + "milk.";
+        } else if (pH >= 6.8 && pH < 7.5) {
+            return details + "pure water at 25 Celsius.";
+        } else if (pH >= 7.5 && pH < 8.4) {
+            return details + "sea water.";
+        } else if (pH >= 8.4 && pH < 11.5) {
+            return details + "ammonia.";
+        } else if (pH >= 11.5 && pH < 12.5) {
+            return details + "bleach.";
+        } else if (pH >= 12.5 && pH <= 14) {
+            return details + "1 M NaOH (Sodium Hydroxide).";
+        }
+
+        throw new IllegalArgumentException("Invalid pH value: " + pHString);
+    }
+
 
 }

@@ -8,6 +8,7 @@
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/connection/RemoteConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/connection/RemoteConnection.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/connection/http/HTTPPOST.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/connection/http/HTTPPOST.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +133,7 @@
       <workItem from="1703263907700" duration="3760000" />
       <workItem from="1703270650746" duration="1216000" />
       <workItem from="1703280128809" duration="4260000" />
-      <workItem from="1703340774975" duration="5256000" />
+      <workItem from="1703340774975" duration="7942000" />
     </task>
     <servers />
   </component>
