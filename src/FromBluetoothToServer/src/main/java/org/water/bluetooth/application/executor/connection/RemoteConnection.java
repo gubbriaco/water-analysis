@@ -72,8 +72,8 @@ public class RemoteConnection extends Thread {
 
             // If the remote device is in the list of permitted remote devices, then the remote connection is
             // established; otherwise, the established temporary connection is closed.
-            //if (true) {
-            if (allowed(remoteDeviceName)) {
+            if (true) {
+            //if (allowed(remoteDeviceName)) {
 
                 Logging.msg(
                         remoteDeviceName + " connected to " + localDevice.getFriendlyName()
@@ -126,7 +126,7 @@ public class RemoteConnection extends Thread {
                             receivedData.setLength(0);
 
                             // Performs an HTTP POST request for temperature, dissolved metals, and pH data to a server.
-                            httpPostRequest(data);
+                            //httpPostRequest(data);
 
                         }
                     }
@@ -137,10 +137,10 @@ public class RemoteConnection extends Thread {
                             "The connection between " + localDevice + " and " + remoteDevice + " has been closed."
                     );
 
-                } catch (InterruptedException e) {
-                    Logging.msg(
-                            "Error during HTTP POST Request. \n Interrupted Exception."
-                    );
+//                } catch (InterruptedException e) {
+//                    Logging.msg(
+//                            "Error during HTTP POST Request. \n Interrupted Exception."
+//                    );
                 } catch (IOException e) {
                     Logging.msg(
                             "Error during data flow."

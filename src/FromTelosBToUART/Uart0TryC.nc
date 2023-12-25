@@ -25,125 +25,118 @@ module Uart0TryC {
 
 implementation {
 
-
-	// Declaration of variables
-	uint8_t DataUart[5];
+	// Dichiarazione di variabili
+	uint8_t DataUart[9];
 	uint8_t receivedData[2];
 	uint16_t ArduinoData;
-	uint16_t Celsius = 0;
-	
+	uint16_t Celsius[3] = {0, 0, 0};
 
-	// Configuration for MSP430 UART communication
+	// Configurazione per la comunicazione UART MSP430
 	msp430_uart_union_config_t msp430_uart_9600_config = {{
-			ubr : UBR_1MHZ_9600,  // Baud rate (use enum msp430_uart_rate_t in msp430usart.h for predefined rates)
-			umctl : UMCTL_1MHZ_9600, // Modulation (use enum msp430_uart_rate_t in msp430usart.h for predefined rates)
-			ssel : 0X02, // Clock source (00=UCLKI; 01=ACLK; 10=SMCLK; 11=SMCLK)
-			pena : 0, // Parity enable (0=disabled; 1=enabled)
-			pev : 0, // Parity select (0=odd; 1=even)
-			spb : 1, // Stop bits (0=one stop bit; 1=two stop bits)
-			clen : 1, // Character length (0=7-bit data; 1=8-bit data)
-			listen : 0, // Listen enable (0=disabled; 1=enabled, feed tx back to receiver)
-			mm : 0, // Multiprocessor mode (0=idle-line protocol; 1=address-bit protocol)
-			ckpl : 0, // Clock polarity (0=normal; 1=inverted)
-			urxse : 0, // Receive start-edge detection (0=disabled; 1=enabled)
-			urxeie : 1, // Erroneous-character receive (0=rejected; 1=recieved and URXIFGx set)
-			urxwie : 0, // Wake-up interrupt-enable (0=all characters set URXIFGx; 1=only address sets URXIFGx)
-			utxe : 1, // 1:enable tx module
-			urxe : 1, // 1:enable rx module
+			ubr : UBR_1MHZ_9600,  
+			umctl : UMCTL_1MHZ_9600, 
+			ssel : 0X02, 
+			pena : 0, 
+			pev : 0, 
+			spb : 1, 
+			clen : 1, 
+			listen : 0, 
+			mm : 0, 
+			ckpl : 0, 
+			urxse : 0, 
+			urxeie : 1, 
+			urxwie : 0, 
+			utxe : 1, 
+			urxe : 1, 
 	}};   
-	
 
-	// Asynchronous command to get the MSP430 UART configuration
+	// Comando asincrono per ottenere la configurazione UART MSP430
 	async command msp430_uart_union_config_t* Msp430UartConfigure.getConfig() {
 		return &msp430_uart_9600_config;
 	}
-	
 
-	// Event triggered when the system is booted
+	// Evento scatenato quando il sistema è avviato
 	event void Boot.booted() {
 
-		// Start a periodic timer with a period of 1024 milliseconds
+		// Avvia un timer periodico con un periodo di 1024 millisecondi
 		call Timer.startPeriodic(1024);
 
 	}
-	
 
-	// Event triggered when the timer fires
+	// Evento scatenato quando il timer scatta
 	event void Timer.fired() {
 
-		// Read temperature, request resource, and print data
+		// Leggi la temperatura, richiedi la risorsa e stampa i dati
 		call Temperature.read();
 		call Resource.request();
 
-		// Print temperature data sent
-		printf("Dati inviati = %d\n", Celsius);
+		// Stampa i dati della temperatura inviati
+		printf("Dati inviati = %d, %d, %d\n", Celsius[0], Celsius[1], Celsius[2]);
 
-		// Combine and print received data from Arduino
+		// Combina e stampa i dati ricevuti da Arduino
 		ArduinoData = receivedData[1] << 8 | receivedData[0];
 		printf("Dati ricevuti = %d\n", ArduinoData);
 
-		// Flush the print buffer
+		// Svuota il buffer di stampa
 		printfflush();
 
 	}
-	
 
-	// Event triggered when temperature reading is done
+	// Evento scatenato quando la lettura della temperatura è completata
 	event void Temperature.readDone(error_t code, uint16_t data) {
 
 		if(code == SUCCESS) {
-			// Convert raw temperature data to Celsius
-			Celsius = (-39 + 0.01 * data);
-            
-			// Store temperature data in DataUart array
-			DataUart[2] = Celsius >> 8; //MSB
-			DataUart[1] = Celsius & 0xff; //LSB
+			// Converti i dati grezzi della temperatura in Celsius
+			Celsius[0] = Celsius[1] = Celsius[2] = (-39 + 0.01 * data);
+
+			// Memorizza i dati della temperatura nell'array DataUart
+			DataUart[2] = Celsius[0] >> 8; // MSB
+			DataUart[1] = Celsius[0] & 0xff; // LSB
+			DataUart[4] = Celsius[1] >> 8; // MSB
+			DataUart[3] = Celsius[1] & 0xff; // LSB
+			DataUart[6] = Celsius[2] >> 8; // MSB
+			DataUart[5] = Celsius[2] & 0xff; // LSB
 
 		}
 	}
-	
 
-	// Event triggered when resource is granted
+	// Evento scatenato quando la risorsa è concessa
 	event void Resource.granted() {
 
-		// Transmission: Send DataUart array via UartStream and toggle LED
+		// Trasmissione: invia l'array DataUart tramite UartStream e cambia lo stato del LED
 		DataUart[0] = SOP;
-		DataUart[3] = EOP;
-		if(call UartStream.send(DataUart, 5) == SUCCESS) {
+		DataUart[7] = EOP;
+		if(call UartStream.send(DataUart, 9) == SUCCESS) {
 			call Leds.led0Toggle();
 		}
-		
-		// Reception: Receive data into receivedData array via UartStream and toggle LED
+
+		// Ricezione: ricevi i dati nell'array receivedData tramite UartStream e cambia lo stato del LED
 		if(call UartStream.receive(receivedData, 2) == SUCCESS) {
 			call Leds.led2Toggle();
 		}
 
 	}
-	
 
-	// Asynchronous events for send, receive, and byte reception in UartStream
+	// Eventi asincroni per invio, ricezione e ricezione byte in UartStream
 	async event void UartStream.sendDone(uint8_t* buf, uint16_t len, error_t error) {
 
-		// Release the resource after sending is done
+		// Rilascia la risorsa dopo che l'invio è completato
 		call Resource.release();
 
 	}
-	
 
 	async event void UartStream.receivedByte(uint8_t byte) {
 
-		// Release the resource after receiving a byte
+		// Rilascia la risorsa dopo la ricezione di un byte
 		call Resource.release();
 
 	}
-	
 
 	async event void UartStream.receiveDone(uint8_t* buf, uint16_t len, error_t error) {
 
-		// Release the resource after receiving is done
+		// Rilascia la risorsa dopo che la ricezione è completata
 		call Resource.release();
 
 	}
-
 
 }
