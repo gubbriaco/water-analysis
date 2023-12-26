@@ -13,6 +13,12 @@ AltSoftSerial uartSerial;
 #define BT_RX_PIN 10
 SoftwareSerial bluetoothSerial(BT_RX_PIN, BT_TX_PIN); // RX, TX
 
+#define TEMPERATURE_POS 0
+#define TDS_POS 1
+#define PH_POS 2
+
+
+
 void setup() {
   Serial.begin(9600);
   while (!Serial) {
@@ -22,8 +28,12 @@ void setup() {
   bluetoothSerial.begin(9600);
 }
 
+
+
 void loop() {
+
   delay(2000);
+  Serial.println("----------------------------------------------------------");
 
   // Flag per inizio e fine
   bool started = false;
@@ -34,6 +44,10 @@ void loop() {
   int data[3];
   byte dataTransmitted[2];
   int ack;
+
+  int temperatureValue;
+  int tdsValue;
+  int phValue;
 
   while (uartSerial.available() > 0) {
     char inChar = uartSerial.read();
@@ -57,10 +71,6 @@ void loop() {
   if (started && ended) {
     for (int i = 0; i < 3; i++) {
       data[i] = word(byte(inData[2 * i + 1]), byte(inData[2 * i]));
-      Serial.print("data_received");
-      Serial.print(i);
-      Serial.print(" = ");
-      Serial.println(data[i]);
     }
     ack = 1;
   } else {
@@ -79,13 +89,27 @@ void loop() {
   Serial.print("ack_sent = ");
   Serial.println(ack);
 
-  for (int i = 0; i < 3; i++) {
-    bluetoothSerial.print(data[i]);
-    if(i < 2) {
-    bluetoothSerial.print(",");
-    }
-  }
+  
+  temperatureValue = data[TEMPERATURE_POS];
+  Serial.print("Temperature = ");
+  Serial.print(temperatureValue);
+  Serial.println(" Celsius");
+  bluetoothSerial.print(temperatureValue);
+  bluetoothSerial.print(",");
+  
+  tdsValue = data[TDS_POS];
+  Serial.print("TDS = ");
+  Serial.print(tdsValue);
+  Serial.println(" PPM");
+  bluetoothSerial.print(tdsValue);
+  bluetoothSerial.print(",");
+
+  phValue = data[PH_POS];
+  Serial.print("pH = ");
+  Serial.println(phValue);
+  bluetoothSerial.print(phValue);
   bluetoothSerial.print(";");
+  
 
   delay(20);
 }

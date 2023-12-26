@@ -1,35 +1,30 @@
 #include "msp430usart.h"
 #include "printf.h"
 
-#define SOP 60
-#define EOP 62
 
-
-module Uart0TryC {
-
-    uses {
-        interface Boot;
-        interface Leds;
-        interface Timer<TMilli> as Timer;
-        interface Read<uint16_t> as Temperature;
-        interface Resource;
-        interface UartStream;
-    }
+module UARTdriver {
 
 	provides {
-		interface Msp430UartConfigure;
+	  	interface Driver;
+	  	interface Msp430UartConfigure;
 	}
+  
+	uses {
+        	interface Boot;
+        	interface Leds;
+        	interface Resource;
+        	interface UartStream;
+    	}
 
 }
 
 
+
 implementation {
 
-	// Dichiarazione di variabili
 	uint8_t DataUart[9];
 	uint8_t receivedData[2];
 	uint16_t ArduinoData;
-	uint16_t Celsius[3] = {0, 0, 0};
 
 	// Configurazione per la comunicazione UART MSP430
 	msp430_uart_union_config_t msp430_uart_9600_config = {{
@@ -55,50 +50,32 @@ implementation {
 		return &msp430_uart_9600_config;
 	}
 
-	// Evento scatenato quando il sistema è avviato
+	
 	event void Boot.booted() {
-
-		// Avvia un timer periodico con un periodo di 1024 millisecondi
-		call Timer.startPeriodic(1024);
-
 	}
-
-	// Evento scatenato quando il timer scatta
-	event void Timer.fired() {
-
-		// Leggi la temperatura, richiedi la risorsa e stampa i dati
-		call Temperature.read();
+	
+	
+	command void Driver.send(uint16_t QualityParameters[NR_QUALITY_PARAMS]) {
+		
+		DataUart[2] = QualityParameters[TEMPERATURE_POS] >> 8; // MSB
+		DataUart[1] = QualityParameters[TEMPERATURE_POS] & 0xff; // LSB
+		DataUart[4] = QualityParameters[TDS_POS] >> 8; // MSB
+		DataUart[3] = QualityParameters[TDS_POS] & 0xff; // LSB
+		DataUart[6] = QualityParameters[PH_POS] >> 8; // MSB
+		DataUart[5] = QualityParameters[PH_POS] & 0xff; // LSB
+		
 		call Resource.request();
-
-		// Stampa i dati della temperatura inviati
-		printf("Dati inviati = %d, %d, %d\n", Celsius[0], Celsius[1], Celsius[2]);
-
-		// Combina e stampa i dati ricevuti da Arduino
+		
+		printf("data_to_arduino = %d, %d, %d\n", QualityParameters[0], QualityParameters[1], QualityParameters[2]);
+		
 		ArduinoData = receivedData[1] << 8 | receivedData[0];
-		printf("Dati ricevuti = %d\n", ArduinoData);
+		printf("ack = %d\n", ArduinoData);
 
-		// Svuota il buffer di stampa
+		
 		printfflush();
-
+	
 	}
 
-	// Evento scatenato quando la lettura della temperatura è completata
-	event void Temperature.readDone(error_t code, uint16_t data) {
-
-		if(code == SUCCESS) {
-			// Converti i dati grezzi della temperatura in Celsius
-			Celsius[0] = Celsius[1] = Celsius[2] = (-39 + 0.01 * data);
-
-			// Memorizza i dati della temperatura nell'array DataUart
-			DataUart[2] = Celsius[0] >> 8; // MSB
-			DataUart[1] = Celsius[0] & 0xff; // LSB
-			DataUart[4] = Celsius[1] >> 8; // MSB
-			DataUart[3] = Celsius[1] & 0xff; // LSB
-			DataUart[6] = Celsius[2] >> 8; // MSB
-			DataUart[5] = Celsius[2] & 0xff; // LSB
-
-		}
-	}
 
 	// Evento scatenato quando la risorsa è concessa
 	event void Resource.granted() {
