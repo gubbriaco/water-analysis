@@ -115,7 +115,7 @@ public class RemoteConnection extends Thread {
                                 Logging.msg("....................................................................");
                                 Logging.msg(currentTime.format(formatter));
                                 Logging.msg("#  Temperature = " + temperature + " Celsius");
-                                Logging.msg("#  Dissolved Metals =" + dissolvedMetals + " PPM");
+                                Logging.msg("#  Dissolved Metals = " + dissolvedMetals + " PPM");
                                 Logging.msg(" |--> " + getDissolvedMetalsDetails(dissolvedMetals));
                                 Logging.msg("#  pH = " + ph);
                                 Logging.msg(" |--> " + getPhDetails(ph));
@@ -281,7 +281,8 @@ public class RemoteConnection extends Thread {
             return details + "U.S. EPA's maximum contamination level.";
         }
 
-        throw new IllegalArgumentException("Invalid dissolved metals value: " + dissolvedMetalsString);
+        return details + "Invalid dissolved metals value: " + dissolvedMetalsString;
+        //throw new IllegalArgumentException("Invalid dissolved metals value: " + dissolvedMetalsString);
     }
 
 
@@ -330,7 +331,8 @@ public class RemoteConnection extends Thread {
             return details + "1 M NaOH (Sodium Hydroxide).";
         }
 
-        throw new IllegalArgumentException("Invalid pH value: " + pHString);
+        return details + "Invalid pH value: " + pHString;
+        //throw new IllegalArgumentException("Invalid pH value: " + pHString);
     }
 
 
