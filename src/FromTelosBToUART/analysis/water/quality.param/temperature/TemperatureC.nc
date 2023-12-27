@@ -20,7 +20,6 @@ implementation {
 
 	
 	event void Boot.booted() {
-		printf("Temperature Analysis initialized.");
 	}
 	
 	
