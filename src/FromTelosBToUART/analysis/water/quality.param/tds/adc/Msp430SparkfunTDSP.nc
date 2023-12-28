@@ -1,8 +1,23 @@
+/**
+ * @file Msp430SparkfunTDSP.nc
+ * @brief Implementation of the Msp430SparkfunTDSP module for Total Dissolved Solids (TDS) sensor in nesC on TinyOS.
+ * @author [gubbriaco, fnicoletti, agrandinetti]
+ */
+
+
 #include <Msp430Adc12.h>
 
 
+/**
+ * @module Msp430SparkfunTDSP
+ * @desc Module for configuring the MSP430 ADC for Total Dissolved Solids (TDS) sensor.
+ */
 module Msp430SparkfunTDSP {
 
+	/** 
+	 * @provides
+	 * @desc Provided interface by the module.
+	 */
   	provides {
   		interface AdcConfigure<const msp430adc12_channel_config_t*> as Sensor;
 	}
@@ -11,8 +26,16 @@ module Msp430SparkfunTDSP {
 
 
 
+/**
+ * @implementation
+ * @desc Implementation of the Msp430SparkfunTDSP module.
+ */
 implementation {
 
+	/** 
+	 * @var configSens
+	 * @desc Declaration of configuration settings for the TDS sensor.
+	 */
   	const msp430adc12_channel_config_t configSens = {
       		inch: INPUT_CHANNEL_A0, 		//0
       		sref: REFERENCE_AVcc_AVss,		//0
@@ -24,7 +47,12 @@ implementation {
       		sampcon_id: SAMPCON_CLOCK_DIV_1		//0
   	};
   
-  
+
+  	/**
+	 * @async_command
+	 * @desc Asynchronous command to obtain the configuration settings for the TDS sensor.
+	 * @return Configuration settings for the TDS sensor.
+	 */
   	async command const msp430adc12_channel_config_t* Sensor.getConfiguration() {
     		return &configSens;
   	}

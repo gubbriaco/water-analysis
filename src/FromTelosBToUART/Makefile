@@ -1,6 +1,9 @@
 COMPONENT=MainApp
+# Include directories for MSP430 USART and printf library
 CFLAGS += -I$(TOSDIR)/chips/msp430/usart
 CFLAGS += -I$(TOSDIR)/lib/printf
+
+# Include directories for project components
 CFLAGS += -I./main
 CFLAGS += -I./analysis
 CFLAGS += -I./analysis/water
@@ -10,6 +13,8 @@ CFLAGS += -I./analysis/water/quality.param/tds
 CFLAGS += -I./analysis/water/quality.param/tds/adc
 CFLAGS += -I./analysis/water/quality.param/ph
 CFLAGS += -I./driver
+
+# Define preprocessor macros
 CFLAGS += -DACK_DIM=2
 CFLAGS += -DUARTdata_DIM=9
 CFLAGS += -DNR_QUALITY_PARAMS=3
@@ -21,4 +26,5 @@ CFLAGS += -DEOP=62
 CFLAGS += -DSOP_POS=0
 CFLAGS += -DEOP_POS=7
 CFLAGS += -DSAMPLING_TIME=1024
+
 include $(MAKERULES)

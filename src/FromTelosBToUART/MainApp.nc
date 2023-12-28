@@ -1,8 +1,27 @@
+/**
+ * @file MainApp.nc
+ * @brief TinyOS configuration for the MainApp.
+ * @author [gubbriaco, fnicoletti, agrandinetti]
+ */
+
+/**
+ * @configuration MainApp
+ * @desc TinyOS configuration for the MainApp.
+ */
 configuration MainApp {
 }
 
+
+
+/**
+ * @implementation
+ */
 implementation {
 	
+	/** 
+	 * @var MainC, Timer, LedsC, PrintfC, SerialStartC, UARTdriver, WaterAnalysis, QualityParamC, TemperatureC, TDSC, PHC
+	 * @desc Declaration of components used in the configuration.
+	 */
 	components MainC;
 	components Main;
 	components new TimerMilliC() as Timer;
@@ -18,9 +37,13 @@ implementation {
 	components PHC;
 	
 	
+	/** 
+	 * @connection MainC, Timer, LedsC, PrintfC, SerialStartC, UARTdriver, WaterAnalysis, QualityParamC, TemperatureC, TDSC, PHC
+	 * @desc Connection of components in the configuration.
+	 */
 	Main.Boot -> MainC;
 	Main.Leds -> LedsC;
-	Main.Timer -> Timer;
+	Main.TimerSampling -> Timer;
 	Main.Driver -> UARTdriver;
 	Main.Analysis -> WaterAnalysis;
 	Main.TimerDriver -> Timer;
