@@ -4,9 +4,7 @@
  * @authors [gubbriaco, fnicoletti, agrandinetti]
  */
 
-
 #include "printf.h"
-
 
 /**
  * @module Main

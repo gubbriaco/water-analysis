@@ -35,20 +35,17 @@ implementation {
 	 */
 	components new AdcReadClientC() as ClientTDS;
 
-
 	/** 
 	 * @assignment
 	 * @desc Assignment of TDSreadInterface to the ClientTDS component.
 	 */
 	TDSreadInterface = ClientTDS;
 
-
 	/** 
 	 * @var Msp430SparkfunTDSP
 	 * @desc Declaration of Msp430SparkfunTDSP component.
 	 */
 	components Msp430SparkfunTDSP;
-
 
 	/** 
 	 * @assignment

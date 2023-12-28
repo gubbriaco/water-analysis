@@ -4,9 +4,7 @@
  * @author [gubbriaco, fnicoletti, agrandinetti]
  */
 
-
 #include "printf.h"
-
 
 /**
  * @module TemperatureC
@@ -45,16 +43,14 @@ implementation {
 	 * @desc Event triggered when the system is booted.
 	 */
 	event void Boot.booted() {
-		// Add initialization code if needed.
+		printf("Temperature Analysis initialized.");
 	}
-	
 	
 	/**
 	 * @var temperature
 	 * @desc Declaration of variable to store temperature value.
 	 */
 	uint16_t temperature;
-	
 	
 	/**
 	 * @command Temperature.get
@@ -63,7 +59,7 @@ implementation {
 	 */
 	command uint16_t Temperature.get() {
 		// TODO: Implement code to retrieve the actual temperature value
-		uint16_t temperature = 18;
+		uint16_t temperature = 180; // Assuming temperature value is 18 scaled by 10
 		return temperature;
 	}
 

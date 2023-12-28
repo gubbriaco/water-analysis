@@ -55,7 +55,7 @@ implementation {
 	 */
 	command uint16_t PH.get() {
 		// TODO: Implement code to retrieve the actual pH value
-		uint16_t pH = 7.1;
+		uint16_t pH = 710; // Assuming pH value is 7.1 scaled by 100
 		return pH;
 	}
 
