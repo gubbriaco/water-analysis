@@ -1,4 +1,4 @@
-# Water Analysis Project
+# Water Analysis
 
 ## Overview
 
