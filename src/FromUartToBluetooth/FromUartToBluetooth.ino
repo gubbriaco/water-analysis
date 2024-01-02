@@ -21,7 +21,7 @@ SoftwareSerial bluetoothSerial(BT_RX_PIN, BT_TX_PIN); // RX, TX
   * ENVIRONMENT = 1 -> POOL
   * ENVIRONMENT = 2 -> SEA
 */
-#define ENVIRONMENT 1
+#define ENVIRONMENT 2
 #define HOME 0
 #define POOL 1
 #define SEA 2

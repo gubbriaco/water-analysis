@@ -2735,15 +2735,15 @@ uint8_t arg_0x40afd288);
 # 120 "/opt/tinyos-main/tos/interfaces/Resource.nc"
 static error_t /*Msp430Uart1P.UartP*/Msp430UartP__0__Resource__release(
 # 43 "/opt/tinyos-main/tos/chips/msp430/usart/Msp430UartP.nc"
-uint8_t arg_0x40b04d0c);
+uint8_t arg_0x40b04d3c);
 # 97 "/opt/tinyos-main/tos/interfaces/Resource.nc"
 static error_t /*Msp430Uart1P.UartP*/Msp430UartP__0__Resource__immediateRequest(
 # 43 "/opt/tinyos-main/tos/chips/msp430/usart/Msp430UartP.nc"
-uint8_t arg_0x40b04d0c);
+uint8_t arg_0x40b04d3c);
 # 102 "/opt/tinyos-main/tos/interfaces/Resource.nc"
 static void /*Msp430Uart1P.UartP*/Msp430UartP__0__Resource__default__granted(
 # 43 "/opt/tinyos-main/tos/chips/msp430/usart/Msp430UartP.nc"
-uint8_t arg_0x40b04d0c);
+uint8_t arg_0x40b04d3c);
 # 54 "/opt/tinyos-main/tos/chips/msp430/usart/HplMsp430UsartInterrupts.nc"
 static void /*Msp430Uart1P.UartP*/Msp430UartP__0__UsartInterrupts__rxDone(
 # 51 "/opt/tinyos-main/tos/chips/msp430/usart/Msp430UartP.nc"
@@ -3064,15 +3064,15 @@ uint8_t arg_0x40afd288);
 # 120 "/opt/tinyos-main/tos/interfaces/Resource.nc"
 static error_t /*Msp430Uart0P.UartP*/Msp430UartP__1__Resource__release(
 # 43 "/opt/tinyos-main/tos/chips/msp430/usart/Msp430UartP.nc"
-uint8_t arg_0x40b04d0c);
+uint8_t arg_0x40b04d3c);
 # 88 "/opt/tinyos-main/tos/interfaces/Resource.nc"
 static error_t /*Msp430Uart0P.UartP*/Msp430UartP__1__Resource__request(
 # 43 "/opt/tinyos-main/tos/chips/msp430/usart/Msp430UartP.nc"
-uint8_t arg_0x40b04d0c);
+uint8_t arg_0x40b04d3c);
 # 102 "/opt/tinyos-main/tos/interfaces/Resource.nc"
 static void /*Msp430Uart0P.UartP*/Msp430UartP__1__Resource__default__granted(
 # 43 "/opt/tinyos-main/tos/chips/msp430/usart/Msp430UartP.nc"
-uint8_t arg_0x40b04d0c);
+uint8_t arg_0x40b04d3c);
 # 54 "/opt/tinyos-main/tos/chips/msp430/usart/HplMsp430UsartInterrupts.nc"
 static void /*Msp430Uart0P.UartP*/Msp430UartP__1__UsartInterrupts__rxDone(
 # 51 "/opt/tinyos-main/tos/chips/msp430/usart/Msp430UartP.nc"
@@ -5554,7 +5554,7 @@ uint8_t arg_0x40afd288);
 # 102 "/opt/tinyos-main/tos/interfaces/Resource.nc"
 static void /*Msp430Uart1P.UartP*/Msp430UartP__0__Resource__granted(
 # 43 "/opt/tinyos-main/tos/chips/msp430/usart/Msp430UartP.nc"
-uint8_t arg_0x40b04d0c);
+uint8_t arg_0x40b04d3c);
 #line 59
 uint16_t /*Msp430Uart1P.UartP*/Msp430UartP__0__m_tx_len;
 #line 59
@@ -6241,7 +6241,7 @@ uint8_t arg_0x40afd288);
 # 102 "/opt/tinyos-main/tos/interfaces/Resource.nc"
 static void /*Msp430Uart0P.UartP*/Msp430UartP__1__Resource__granted(
 # 43 "/opt/tinyos-main/tos/chips/msp430/usart/Msp430UartP.nc"
-uint8_t arg_0x40b04d0c);
+uint8_t arg_0x40b04d3c);
 #line 59
 uint16_t /*Msp430Uart0P.UartP*/Msp430UartP__1__m_tx_len;
 #line 59
@@ -11173,9 +11173,9 @@ static inline void /*Msp430Uart0P.UartP*/Msp430UartP__1__Resource__default__gran
 }
 
 # 102 "/opt/tinyos-main/tos/interfaces/Resource.nc"
-inline static void /*Msp430Uart0P.UartP*/Msp430UartP__1__Resource__granted(uint8_t arg_0x40b04d0c){
+inline static void /*Msp430Uart0P.UartP*/Msp430UartP__1__Resource__granted(uint8_t arg_0x40b04d3c){
 #line 102
-  switch (arg_0x40b04d0c) {
+  switch (arg_0x40b04d3c) {
 #line 102
     case /*MainApp.Msp430Uart0C*/Msp430Uart0C__0__CLIENT_ID:
 #line 102
@@ -11185,7 +11185,7 @@ inline static void /*Msp430Uart0P.UartP*/Msp430UartP__1__Resource__granted(uint8
 #line 102
     default:
 #line 102
-      /*Msp430Uart0P.UartP*/Msp430UartP__1__Resource__default__granted(arg_0x40b04d0c);
+      /*Msp430Uart0P.UartP*/Msp430UartP__1__Resource__default__granted(arg_0x40b04d3c);
 #line 102
       break;
 #line 102
@@ -12127,9 +12127,9 @@ static inline void /*Msp430Uart1P.UartP*/Msp430UartP__0__Resource__default__gran
 }
 
 # 102 "/opt/tinyos-main/tos/interfaces/Resource.nc"
-inline static void /*Msp430Uart1P.UartP*/Msp430UartP__0__Resource__granted(uint8_t arg_0x40b04d0c){
+inline static void /*Msp430Uart1P.UartP*/Msp430UartP__0__Resource__granted(uint8_t arg_0x40b04d3c){
 #line 102
-  switch (arg_0x40b04d0c) {
+  switch (arg_0x40b04d3c) {
 #line 102
     case /*PlatformSerialC.UartC*/Msp430Uart1C__0__CLIENT_ID:
 #line 102
@@ -12139,7 +12139,7 @@ inline static void /*Msp430Uart1P.UartP*/Msp430UartP__0__Resource__granted(uint8
 #line 102
     default:
 #line 102
-      /*Msp430Uart1P.UartP*/Msp430UartP__0__Resource__default__granted(arg_0x40b04d0c);
+      /*Msp430Uart1P.UartP*/Msp430UartP__0__Resource__default__granted(arg_0x40b04d3c);
 #line 102
       break;
 #line 102
