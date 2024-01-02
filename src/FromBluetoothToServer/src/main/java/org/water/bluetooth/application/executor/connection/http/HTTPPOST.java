@@ -10,8 +10,20 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 /**
- * This class represents an HTTP POST request thread that sends data received from a remote device via Bluetooth
+ * The HTTPPOST class represents an HTTP POST request thread that sends data received from a remote device via Bluetooth
  * communication to a server using the specified data type.
+ *
+ * <p>
+ * This class extends the Thread class and is designed to be instantiated for each HTTP POST request to the server.
+ * It includes methods for constructing and executing the HTTP POST request, handling the response, and determining the
+ * appropriate endpoint based on the data type.
+ * </p>
+ *
+ * @version 1.0
+ * @since 2023-12-09
+ * @author gubbriaco
+ * @author agrandinetti
+ * @author fnicoletti
  */
 public class HTTPPOST extends Thread {
 

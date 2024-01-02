@@ -1,7 +1,18 @@
 package org.water.bluetooth.application.executor.connection.http;
 
 /**
- * Enumeration to facilitate HTTP POST to a related endpoint, corresponding to a specific data type, to the server.
+ * The DataType enumeration facilitates HTTP POST to a related endpoint, corresponding to a specific data type, to the server.
+ *
+ * <p>
+ * The enumeration includes values for different data types, such as TEMPERATURE, DISSOLVED_METALS, and PH,
+ * each representing a specific type of data to be sent via HTTP POST.
+ * </p>
+ *
+ * @version 1.0
+ * @since 2023-12-09
+ * @author gubbriaco
+ * @author agrandinietti
+ * @author fnicoletti
  */
 public enum DataType {
 
