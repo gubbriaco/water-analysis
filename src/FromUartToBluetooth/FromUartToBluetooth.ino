@@ -17,6 +17,16 @@ SoftwareSerial bluetoothSerial(BT_RX_PIN, BT_TX_PIN); // RX, TX
 #define TDS_POS 1
 #define PH_POS 2
 
+/**
+  * ENVIRONMENT = 0 -> HOME
+  * ENVIRONMENT = 1 -> POOL
+  * ENVIRONMENT = 2 -> SEA
+*/
+#define ENVIRONMENT 1
+#define HOME 0
+#define POOL 1
+#define SEA 2
+
 
 
 void setup() {
@@ -90,26 +100,55 @@ void loop() {
   Serial.println(ack);
 
   
-  temperatureValue = data[TEMPERATURE_POS];
-  Serial.print("Temperature = ");
-  Serial.print(temperatureValue);
-  Serial.println(" Celsius");
-  bluetoothSerial.print(temperatureValue);
-  bluetoothSerial.print(",");
-  
-  tdsValue = data[TDS_POS];
-  Serial.print("TDS = ");
-  Serial.print(tdsValue);
-  Serial.println(" PPM");
-  bluetoothSerial.print(tdsValue);
-  bluetoothSerial.print(",");
+  if (ENVIRONMENT == HOME) {
+    tdsValue = data[TDS_POS];
+    Serial.print("TDS = ");
+    Serial.print(tdsValue);
+    Serial.println(" PPM");
+    bluetoothSerial.print(tdsValue);
+    bluetoothSerial.print(",");
 
-  phValue = data[PH_POS];
-  Serial.print("pH = ");
-  Serial.println(phValue);
-  bluetoothSerial.print(phValue);
-  bluetoothSerial.print(";");
-  
+    phValue = data[PH_POS];
+    Serial.print("pH = ");
+    Serial.println(phValue);
+    bluetoothSerial.print(phValue);
+    bluetoothSerial.print(";");
+
+  } else if (ENVIRONMENT == POOL) {
+    temperatureValue = data[TEMPERATURE_POS];
+    Serial.print("Temperature = ");
+    Serial.print(temperatureValue);
+    Serial.println(" Celsius");
+    bluetoothSerial.print(temperatureValue);
+    bluetoothSerial.print(",");
+
+    phValue = data[PH_POS];
+    Serial.print("pH = ");
+    Serial.println(phValue);
+    bluetoothSerial.print(phValue);
+    bluetoothSerial.print(";");
+
+  } else if (ENVIRONMENT == SEA) {
+    temperatureValue = data[TEMPERATURE_POS];
+    Serial.print("Temperature = ");
+    Serial.print(temperatureValue);
+    Serial.println(" Celsius");
+    bluetoothSerial.print(temperatureValue);
+    bluetoothSerial.print(",");
+    
+    tdsValue = data[TDS_POS];
+    Serial.print("TDS = ");
+    Serial.print(tdsValue);
+    Serial.println(" PPM");
+    bluetoothSerial.print(tdsValue);
+    bluetoothSerial.print(",");
+
+    phValue = data[PH_POS];
+    Serial.print("pH = ");
+    Serial.println(phValue);
+    bluetoothSerial.print(phValue);
+    bluetoothSerial.print(";");
+  }
 
   delay(20);
 }
