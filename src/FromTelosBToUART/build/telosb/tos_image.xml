@@ -1,11 +1,11 @@
 <tos_image>
   <ident>
-    <uidhash>E13C4B71L</uidhash>
+    <uidhash>D63EC2DCL</uidhash>
     <hostname>instant-contiki</hostname>
     <username>root</username>
     <appname>MainApp</appname>
     <userhash>93A9BB66L</userhash>
-    <timestamp>6594492CL</timestamp>
+    <timestamp>65944E87L</timestamp>
     <deluge_support>no</deluge_support>
     <platform>telosb</platform>
   </ident>
