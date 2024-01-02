@@ -1,3 +1,17 @@
+#!/bin/bash
+
+if [ "$#" -eq 0 ]; then
+  echo "Usage: $0 <argument>"
+  exit 1
+fi
+
+# Access the first argument using $1
+arg1="$1"
+
+MAIN_DIR="./main/Main.nc"
+
+
+cat <<EOL > "$MAIN_DIR"
 /**
  * @file Main.nc
  * @brief Implementation of the Main module for TelosB in nesC on TinyOS.
@@ -50,7 +64,37 @@ implementation {
      * @var QualityParams
      * @desc Global array to store quality parameters.
      */
+EOL
+
+
+generate_array() {
+    case $arg1 in
+        "home")
+            cat <<EOL >> "$MAIN_DIR"
+	uint16_t QualityParams[NR_QUALITY_PARAMS] = {-1, -1};
+EOL
+            ;;
+        "sea")
+            cat <<EOL >> "$MAIN_DIR"
 	uint16_t QualityParams[NR_QUALITY_PARAMS] = {-1, -1, -1};
+EOL
+            ;;
+        "pool")
+            cat <<EOL >> "$MAIN_DIR"
+	uint16_t QualityParams[NR_QUALITY_PARAMS] = {-1, -1};
+EOL
+            ;;
+        *)
+            echo "Unknown value in argument: $arg1"
+            exit 1
+            ;;
+    esac
+}
+
+generate_array
+
+
+cat <<EOL >> "$MAIN_DIR"
 
 
     /**
@@ -76,3 +120,4 @@ implementation {
     }
 
 }
+EOL

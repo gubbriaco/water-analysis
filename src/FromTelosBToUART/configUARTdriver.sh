@@ -1,3 +1,16 @@
+#!/bin/bash
+
+if [ "$#" -eq 0 ]; then
+  echo "Usage: $0 <argument>"
+  exit 1
+fi
+
+# Access the first argument using $1
+arg1="$1"
+
+UARTDRIVER_DIR="./driver/UARTdriver.nc"
+
+cat <<EOL > "$UARTDRIVER_DIR"
 /**
  * @file UARTdriver.nc
  * @brief Implementation of the UART driver module for MSP430 in nesC on TinyOS.
@@ -100,6 +113,27 @@ implementation {
 	command void Driver.send(uint16_t QualityParameters[NR_QUALITY_PARAMS]) {
 		
 		// Populate DataUart array with quality parameters
+EOL
+
+
+generate_packet() {
+    case $arg1 in
+        "home")
+            cat <<EOL >> "$UARTDRIVER_DIR"
+		DataUart[2] = QualityParameters[TDS_POS] >> 8; // MSB
+		DataUart[1] = QualityParameters[TDS_POS] & 0xff; // LSB
+		DataUart[4] = QualityParameters[PH_POS] >> 8; // MSB
+		DataUart[3] = QualityParameters[PH_POS] & 0xff; // LSB
+		
+		// Request the resource before sending data
+		call Resource.request();
+		
+		// Print the data to be sent for debugging
+		printf("data_to_arduino = %d, %d\n", QualityParameters[TDS_POS], QualityParameters[PH_POS]);
+EOL
+            ;;
+        "sea")
+            cat <<EOL >> "$UARTDRIVER_DIR"
 		DataUart[2] = QualityParameters[TEMPERATURE_POS] >> 8; // MSB
 		DataUart[1] = QualityParameters[TEMPERATURE_POS] & 0xff; // LSB
 		DataUart[4] = QualityParameters[TDS_POS] >> 8; // MSB
@@ -112,6 +146,33 @@ implementation {
 		
 		// Print the data to be sent for debugging
 		printf("data_to_arduino = %d, %d, %d\n", QualityParameters[TEMPERATURE_POS], QualityParameters[TDS_POS], QualityParameters[PH_POS]);
+EOL
+            ;;
+        "pool")
+            cat <<EOL >> "$UARTDRIVER_DIR"
+		DataUart[2] = QualityParameters[TEMPERATURE_POS] >> 8; // MSB
+		DataUart[1] = QualityParameters[TEMPERATURE_POS] & 0xff; // LSB
+		DataUart[4] = QualityParameters[PH_POS] >> 8; // MSB
+		DataUart[3] = QualityParameters[PH_POS] & 0xff; // LSB
+		
+		// Request the resource before sending data
+		call Resource.request();
+		
+		// Print the data to be sent for debugging
+		printf("data_to_arduino = %d, %d\n", QualityParameters[TEMPERATURE_POS], QualityParameters[PH_POS]);
+EOL
+            ;;
+        *)
+            echo "Unknown value in argument: $arg1"
+            exit 1
+            ;;
+    esac
+}
+
+generate_packet
+
+
+cat <<EOL >> "$UARTDRIVER_DIR"
 
 	// Receive acknowledgment from Arduino
 		ArduinoData = receivedData[1] << 8 | receivedData[0];
@@ -179,5 +240,8 @@ implementation {
 
 	}
 
+EOL
 
-}
+
+echo -e "\n}" >> "$UARTDRIVER_DIR"
+

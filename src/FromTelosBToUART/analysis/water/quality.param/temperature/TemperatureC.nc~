@@ -63,7 +63,7 @@ implementation {
 	 */
 	command uint16_t Temperature.get() {
 		// TODO: Implement code to retrieve the actual temperature value
-		temperature = 18;
+		uint16_t temperature = 18;
 		return temperature;
 	}
 

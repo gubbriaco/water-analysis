@@ -6643,7 +6643,15 @@ static uint16_t QualityParamC__PH__get(void );
 static uint16_t QualityParamC__Temperature__get(void );
 # 58 "./analysis/water/quality.param/QualityParamC.nc"
 static uint16_t QualityParamC__QualityParam__get(uint8_t ParamType);
-# 64 "./analysis/water/quality.param/temperature/TemperatureC.nc"
+# 56 "./analysis/water/quality.param/temperature/TemperatureC.nc"
+uint16_t TemperatureC__temperature;
+
+
+
+
+
+
+
 static inline uint16_t TemperatureC__Temperature__get(void );
 # 55 "/opt/tinyos-main/tos/interfaces/Read.nc"
 static error_t TDSC__TDSmeasure__read(void );
@@ -14758,10 +14766,8 @@ static inline uint16_t TemperatureC__Temperature__get(void )
 #line 64
 {
 
-  uint16_t temperature = 18;
-
-#line 67
-  return temperature;
+  TemperatureC__temperature = 18;
+  return TemperatureC__temperature;
 }
 
 # 18 "./analysis/water/quality.param/temperature/Temperature.nc"

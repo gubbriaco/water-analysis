@@ -18,10 +18,6 @@ configuration MainApp {
  */
 implementation {
 	
-	/** 
-	 * @var MainC, Timer, LedsC, PrintfC, SerialStartC, UARTdriver, WaterAnalysis, QualityParamC, TemperatureC, TDSC, PHC
-	 * @desc Declaration of components used in the configuration.
-	 */
 	components MainC;
 	components Main;
 	components new TimerMilliC() as Timer;
@@ -35,12 +31,7 @@ implementation {
 	components TDSC;
 	components new Msp430SparkfunTDSC() as TDSsensorDriver;
 	components PHC;
-	
-	
-	/** 
-	 * @connection MainC, Timer, LedsC, PrintfC, SerialStartC, UARTdriver, WaterAnalysis, QualityParamC, TemperatureC, TDSC, PHC
-	 * @desc Connection of components in the configuration.
-	 */
+
 	Main.Boot -> MainC;
 	Main.Leds -> LedsC;
 	Main.TimerSampling -> Timer;
@@ -49,14 +40,13 @@ implementation {
 	Main.TimerDriver -> Timer;
 	WaterAnalysis.Leds -> LedsC;
 	WaterAnalysis.QualityParam -> QualityParamC;
-	QualityParamC.Temperature -> TemperatureC;
-	QualityParamC.TDS -> TDSC;
-	TDSC.TDSmeasure -> TDSsensorDriver.TDSreadInterface;
-	QualityParamC.PH -> PHC;
 	UARTdriver.Resource -> Msp430Uart0C;
 	UARTdriver.UartStream -> Msp430Uart0C;
 	UARTdriver.Msp430UartConfigure <- Msp430Uart0C;
 	UARTdriver.Leds -> LedsC;
-	
-}
+	QualityParamC.Temperature -> TemperatureC;
+	QualityParamC.TDS -> TDSC;
+	TDSC.TDSmeasure -> TDSsensorDriver.TDSreadInterface;
+	QualityParamC.PH -> PHC;
 
+}
