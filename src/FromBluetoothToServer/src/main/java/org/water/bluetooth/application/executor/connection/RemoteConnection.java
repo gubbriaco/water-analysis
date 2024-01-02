@@ -1,5 +1,6 @@
 package org.water.bluetooth.application.executor.connection;
 
+import org.water.bluetooth.application.EnvironmentType;
 import org.water.bluetooth.application.executor.connection.http.DataType;
 import org.water.bluetooth.application.executor.connection.http.HTTPPOST;
 import org.water.bluetooth.application.utils.Logging;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static org.water.bluetooth.application.executor.connection.Connection.allowed;
+import static org.water.bluetooth.application.executor.connection.Connection.getEnvironment;
 
 /**
  * Represents a thread handling an incoming Bluetooth connection request.
@@ -101,24 +103,56 @@ public class RemoteConnection extends Thread {
                             // Split the received data into individual values
                             String[] values = data.split(",");
                             // Check if the array has at least three elements
-                            if (values.length >= 3) {
-                                String temperature = values[0];
-                                String dissolvedMetals = values[1];
-                                String ph = values[2];
+                            if (values.length >= 1) {
+
+                                String temperature = "-1";
+                                String dissolvedMetals = "-1";
+                                String ph = "-1";
 
                                 // Get current date and time
                                 LocalDateTime currentTime = LocalDateTime.now();
                                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-                                // Print the formatted output with current date and time
-                                Logging.msg("");
-                                Logging.msg("....................................................................");
-                                Logging.msg(currentTime.format(formatter));
-                                Logging.msg("#  Temperature = " + temperature + " Celsius");
-                                Logging.msg("#  Dissolved Metals = " + dissolvedMetals + " PPM");
-                                Logging.msg(" |--> " + getDissolvedMetalsDetails(dissolvedMetals));
-                                Logging.msg("#  pH = " + ph);
-                                Logging.msg(" |--> " + getPhDetails(ph));
+                                EnvironmentType environment = getEnvironment();
+                                if (environment == EnvironmentType.HOME) {
+                                    dissolvedMetals = values[0];
+                                    ph = values[1];
+
+                                    // Print the formatted output with current date and time
+                                    Logging.msg("");
+                                    Logging.msg("....................................................................");
+                                    Logging.msg(currentTime.format(formatter));
+                                    Logging.msg("#  Dissolved Metals = " + dissolvedMetals + " PPM");
+                                    Logging.msg(" |--> " + getDissolvedMetalsDetails(dissolvedMetals));
+                                    Logging.msg("#  pH = " + ph);
+                                    Logging.msg(" |--> " + getPhDetails(ph));
+                                } else if (environment == EnvironmentType.POOL) {
+                                    temperature = values[0];
+                                    ph = values[1];
+
+                                    // Print the formatted output with current date and time
+                                    Logging.msg("");
+                                    Logging.msg("....................................................................");
+                                    Logging.msg(currentTime.format(formatter));
+                                    Logging.msg("#  Temperature = " + temperature + " Celsius");
+                                    Logging.msg("#  pH = " + ph);
+                                    Logging.msg(" |--> " + getPhDetails(ph));
+                                } else if (environment == EnvironmentType.SEA) {
+                                    temperature = values[0];
+                                    dissolvedMetals = values[1];
+                                    ph = values[2];
+
+                                    // Print the formatted output with current date and time
+                                    Logging.msg("");
+                                    Logging.msg("....................................................................");
+                                    Logging.msg(currentTime.format(formatter));
+                                    Logging.msg("#  Temperature = " + temperature + " Celsius");
+                                    Logging.msg("#  Dissolved Metals = " + dissolvedMetals + " PPM");
+                                    Logging.msg(" |--> " + getDissolvedMetalsDetails(dissolvedMetals));
+                                    Logging.msg("#  pH = " + ph);
+                                    Logging.msg(" |--> " + getPhDetails(ph));
+                                }
+
                             } else {
                                 Logging.msg("Invalid data format: " + data);
                             }

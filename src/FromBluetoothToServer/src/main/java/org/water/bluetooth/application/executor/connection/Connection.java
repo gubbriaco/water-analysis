@@ -1,5 +1,7 @@
 package org.water.bluetooth.application.executor.connection;
 
+import org.water.bluetooth.application.EnvironmentType;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -45,6 +47,37 @@ public class Connection {
                 remoteDeviceName.equalsIgnoreCase(device2) ||
                 remoteDeviceName.equalsIgnoreCase(device3);
 
+    }
+
+
+    public static EnvironmentType getEnvironment() throws IOException, NullPointerException {
+
+        // Extracting permitted devices from the file {@see config.properties} containing the list of permitted devices.
+        Path path = FileSystems.getDefault().getPath("");
+        String directoryName = path.toAbsolutePath().toString();
+        File allowedDevices = new File(
+                directoryName + "/src/main/resources/config.properties"
+        );
+        Properties properties = new Properties();
+        FileInputStream fileInputStream = new FileInputStream(
+                allowedDevices.getAbsolutePath()
+        );
+        properties.load(fileInputStream);
+        String environmentStr = properties.getProperty("ENVIRONMENT");
+        System.out.println("ENVIRONMENT: " + environmentStr);
+
+        EnvironmentType environment = null;
+        if (environmentStr.equalsIgnoreCase("HOME")) {
+            environment = EnvironmentType.HOME;
+        } else if (environmentStr.equalsIgnoreCase("POOL")) {
+            environment = EnvironmentType.POOL;
+        } else if (environmentStr.equalsIgnoreCase("SEA")) {
+            environment = EnvironmentType.SEA;
+        } else {
+            throw new NullPointerException("Environment property not valid.");
+        }
+
+        return environment;
     }
 
 }
