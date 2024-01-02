@@ -18,8 +18,28 @@ import static org.water.bluetooth.application.executor.connection.Connection.all
 import static org.water.bluetooth.application.executor.connection.Connection.getEnvironment;
 
 /**
- * Represents a thread handling an incoming Bluetooth connection request.
+ * The RemoteConnection class represents a thread handling an incoming Bluetooth connection request.
  * This class extends Thread and is designed to be instantiated for each incoming connection.
+ *
+ * <p>
+ * The class includes methods for handling the Bluetooth connection, extracting data from the incoming stream,
+ * and performing HTTP POST requests for temperature, dissolved metals, and pH data to a server.
+ * </p>
+ *
+ * <p>
+ * It uses the "config.properties" file located in the "src/main/resources" directory for configuration properties
+ * such as allowed devices and the current environment.
+ * </p>
+ *
+ * <p>
+ * The class also includes methods for extracting details about dissolved metals and pH based on their values.
+ * </p>
+ *
+ * @version 1.0
+ * @since 2023-12-09
+ * @author gubbriaco
+ * @author agrandinetti
+ * @author fnicoletti
  */
 public class RemoteConnection extends Thread {
 
@@ -113,6 +133,8 @@ public class RemoteConnection extends Thread {
                                 LocalDateTime currentTime = LocalDateTime.now();
                                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+                                // Received data via Bluetooth according to the environment in which the devices are
+                                // placed.
                                 EnvironmentType environment = getEnvironment();
                                 if (environment == EnvironmentType.HOME) {
                                     dissolvedMetals = values[0];
@@ -298,9 +320,9 @@ public class RemoteConnection extends Thread {
         String details = "";
 
         if (dissolvedMetals >= 0 && dissolvedMetals < 200) {
-            details += "Hard water.";
+            details += "Hard water. ";
         } else if (dissolvedMetals >= 200 && dissolvedMetals < 400) {
-            details += "Average tap water.";
+            details += "Average tap water. ";
         }
 
         if (dissolvedMetals >= 0 && dissolvedMetals < 50) {
@@ -332,11 +354,11 @@ public class RemoteConnection extends Thread {
         String details = "";
 
         if (pH >= 0 && pH < 7) {
-            details += "Acid.";
+            details += "Acid. ";
         } else if (pH >= 7 && pH < 7.5) {
-            details += "Neutral.";
+            details += "Neutral. ";
         } else if (pH >= 7.5 && pH <= 14) {
-            details += "Base.";
+            details += "Base. ";
         }
 
         details += "Equivalent to ";

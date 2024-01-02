@@ -7,8 +7,30 @@ import org.water.bluetooth.application.executor.BluetoothServerExecutorApplicati
 import org.water.bluetooth.application.utils.Logging;
 
 /**
- * Singleton implementation of a Bluetooth server application.
- * This class provides a single instance of the Bluetooth server and initializes its execution.
+ * The ServerApplication class represents a singleton implementation of a Bluetooth server application.
+ * It provides a single instance of the Bluetooth server and initializes its execution.
+ *
+ * <p>
+ * The class follows the singleton pattern, ensuring that only one instance is created and providing
+ * easy access to that instance through the {@link ServerApplication#getInstance()} method.
+ * </p>
+ *
+ * <p>
+ * Usage:
+ * <pre>
+ * // Get the instance of ServerApplication
+ * ServerApplication serverApp = ServerApplication.getInstance();
+ *
+ * // Start the Bluetooth server
+ * serverApp.start();
+ * </pre>
+ * </p>
+ *
+ * @version 1.0
+ * @since 2023-12-09
+ * @author gubbriaco
+ * @author agrandinetti
+ * @author fnicoletti
  */
 public class ServerApplication implements Server {
 

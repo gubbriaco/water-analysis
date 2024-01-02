@@ -10,9 +10,33 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnectionNotifier;
 import java.io.IOException;
 
+import static org.water.bluetooth.application.executor.connection.Connection.toStringProperties;
+
 /**
- * Implementation of {@link BluetoothServerExecutor}.
- * This class represents a Bluetooth server application that listens for incoming connections.
+ * The BluetoothServerExecutorApplication class represents a Bluetooth server application that listens for incoming connections.
+ * It implements the {@link BluetoothServerExecutor} interface and provides methods for initializing and executing the Bluetooth server.
+ *
+ * <p>
+ * The class uses a Universally Unique Identifier (UUID) to identify the Bluetooth server and creates a StreamConnectionNotifier
+ * to accept incoming Bluetooth connections.
+ * </p>
+ *
+ * <p>
+ * Usage:
+ * <pre>
+ * // Initialize the Bluetooth server
+ * BluetoothServerExecutorApplication bluetoothServer = new BluetoothServerExecutorApplication();
+ *
+ * // Start the Bluetooth server and wait for incoming connections
+ * bluetoothServer.execute();
+ * </pre>
+ * </p>
+ *
+ * @version 1.0
+ * @since 2023-12-09
+ * @author gubbriaco
+ * @author agrandinetti
+ * @author fnicoletti
  */
 public class BluetoothServerExecutorApplication implements BluetoothServerExecutor {
 
@@ -64,6 +88,11 @@ public class BluetoothServerExecutorApplication implements BluetoothServerExecut
 
         // Open a StreamConnectionNotifier to accept incoming Bluetooth connections.
         notifier = (StreamConnectionNotifier) Connector.open(url);
+
+        // Log the type of environment where devices is located.
+        Logging.msg(
+                "ENVIRONMENT: " + toStringProperties("ENVIRONMENT")
+        );
 
         // Set the running flag to true, indicating that the Bluetooth server is ready to accept connections.
         running = true;

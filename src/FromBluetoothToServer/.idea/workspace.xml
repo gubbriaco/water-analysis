@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="5cbbe70c-a7d2-48ba-8805-2ec1156b074e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/BluetoothServerExecutorApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/BluetoothServerExecutorApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/connection/Connection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/connection/Connection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/connection/RemoteConnection.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/water/bluetooth/application/executor/connection/RemoteConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/config.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.properties" afterDir="false" />
@@ -140,6 +141,7 @@
       <workItem from="1703613614285" duration="753000" />
       <workItem from="1704218414610" duration="55000" />
       <workItem from="1704218486418" duration="1433000" />
+      <workItem from="1704228916835" duration="2262000" />
     </task>
     <servers />
   </component>
