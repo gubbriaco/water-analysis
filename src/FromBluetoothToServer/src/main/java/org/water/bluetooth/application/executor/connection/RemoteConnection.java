@@ -124,56 +124,12 @@ public class RemoteConnection extends Thread {
                             String[] values = data.split(",");
                             // Check if the array has at least three elements
                             if (values.length >= 1) {
-
-                                String temperature = "-1";
-                                String dissolvedMetals = "-1";
-                                String ph = "-1";
-
                                 // Get current date and time
                                 LocalDateTime currentTime = LocalDateTime.now();
                                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                
-                                // Received data via Bluetooth according to the environment in which the devices are
-                                // placed.
-                                EnvironmentType environment = getEnvironment();
-                                if (environment == EnvironmentType.HOME) {
-                                    dissolvedMetals = values[0];
-                                    ph = values[1];
-
-                                    // Print the formatted output with current date and time
-                                    Logging.msg("");
-                                    Logging.msg("....................................................................");
-                                    Logging.msg(currentTime.format(formatter));
-                                    Logging.msg("#  Dissolved Metals = " + dissolvedMetals + " PPM");
-                                    Logging.msg(" |--> " + getDissolvedMetalsDetails(dissolvedMetals));
-                                    Logging.msg("#  pH = " + ph);
-                                    Logging.msg(" |--> " + getPhDetails(ph));
-                                } else if (environment == EnvironmentType.POOL) {
-                                    temperature = values[0];
-                                    ph = values[1];
-
-                                    // Print the formatted output with current date and time
-                                    Logging.msg("");
-                                    Logging.msg("....................................................................");
-                                    Logging.msg(currentTime.format(formatter));
-                                    Logging.msg("#  Temperature = " + temperature + " Celsius");
-                                    Logging.msg("#  pH = " + ph);
-                                    Logging.msg(" |--> " + getPhDetails(ph));
-                                } else if (environment == EnvironmentType.SEA) {
-                                    temperature = values[0];
-                                    dissolvedMetals = values[1];
-                                    ph = values[2];
-
-                                    // Print the formatted output with current date and time
-                                    Logging.msg("");
-                                    Logging.msg("....................................................................");
-                                    Logging.msg(currentTime.format(formatter));
-                                    Logging.msg("#  Temperature = " + temperature + " Celsius");
-                                    Logging.msg("#  Dissolved Metals = " + dissolvedMetals + " PPM");
-                                    Logging.msg(" |--> " + getDissolvedMetalsDetails(dissolvedMetals));
-                                    Logging.msg("#  pH = " + ph);
-                                    Logging.msg(" |--> " + getPhDetails(ph));
-                                }
+                                String request= makeJsonString(values);
+                                HTTPPOST httppost= new HTTPPOST(request);
+                                Logging.msg(httppost.getResponse());
 
                             } else {
                                 Logging.msg("Invalid data format: " + data);
@@ -219,94 +175,6 @@ public class RemoteConnection extends Thread {
         }
 
     }
-
-
-    /**
-     * Performs an HTTP POST request for temperature, dissolved metals, and pH data to a server.
-     *
-     * @param data The data string containing values separated by commas and semicolons (e.g., "24.12, 4325, 7.8;").
-     * @throws IOException              If an I/O error occurs while making the HTTP POST request.
-     * @throws InterruptedException     If the current thread is interrupted while waiting for the HTTP POST threads to
-     *                                  complete.
-     * @throws IllegalArgumentException If the provided data string does not contain valid temperature, dissolved
-     *                                  metals, or pH data.
-     */
-    private void httpPostRequest(String data) throws
-            IOException,
-            InterruptedException,
-            IllegalArgumentException {
-        String temperature = getTemperature(data);
-        String dissolvedMetals = getDissolvedMetals(data);
-        String ph = getPh(data);
-
-        // Create and start separate threads for each HTTP POST request
-        Thread temperatureHttpPost = new HTTPPOST(temperature, DataType.TEMPERATURE);
-        Thread dissolvedMetalsHttpPost = new HTTPPOST(dissolvedMetals, DataType.DISSOLVED_METALS);
-        Thread phHttpPost = new HTTPPOST(ph, DataType.PH);
-
-        // Start each thread
-        temperatureHttpPost.start();
-        dissolvedMetalsHttpPost.start();
-        phHttpPost.start();
-
-        // Wait for each thread to complete before continuing
-        temperatureHttpPost.join();
-        dissolvedMetalsHttpPost.join();
-        phHttpPost.join();
-    }
-
-
-
-    /**
-     * Extracts the temperature value from the provided data string.
-     *
-     * @param data The data string containing values separated by commas and semicolons (e.g., "24.12, 4325, 7.8;").
-     * @return The temperature value extracted from the data string.
-     * @throws IllegalArgumentException If the provided data string does not contain valid temperature data.
-     */
-    private String getTemperature(String data) throws IllegalArgumentException {
-        String[] values = data.split("[,;]");
-        if (values.length > 0) {
-            return values[0];
-        } else {
-            throw new IllegalArgumentException("Illegal temperature data: " + data);
-        }
-    }
-
-
-    /**
-     * Extracts the dissolved metals value from the provided data string.
-     *
-     * @param data The data string containing values separated by commas and semicolons (e.g., "24.12, 4325, 7.8;").
-     * @return The dissolved metals value extracted from the data string.
-     * @throws IllegalArgumentException If the provided data string does not contain valid dissolved metals data.
-     */
-    private String getDissolvedMetals(String data) {
-        String[] values = data.split("[,;]");
-        if (values.length > 1) {
-            return values[1];
-        } else {
-            throw new IllegalArgumentException("Illegal dissolved metals data: " + data);
-        }
-    }
-
-
-    /**
-     * Extracts the pH value from the provided data string.
-     *
-     * @param data The data string containing values separated by commas and semicolons (e.g., "24.12, 4325, 7.8;").
-     * @return The pH value extracted from the data string.
-     * @throws IllegalArgumentException If the provided data string does not contain valid pH data.
-     */
-    private String getPh(String data) {
-        String[] values = data.split("[,;]");
-        if (values.length > 2) {
-            return values[2];
-        } else {
-            throw new IllegalArgumentException("Illegal pH data: " + data);
-        }
-    }
-
 
     /**
      * Determines the dissolved metals details based on the provided dissolved metals value.
@@ -389,6 +257,14 @@ public class RemoteConnection extends Thread {
 
         return details + "Invalid pH value: " + pHString;
         //throw new IllegalArgumentException("Invalid pH value: " + pHString);
+    }
+    public String makeJsonString(String[] values){
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\"deviceAddress\":\""+remoteDevice.getBluetoothAddress()+"\",");
+        sb.append("\"temperature\":"+values[0]+",");
+        sb.append("\"dissolvedMetals\":"+values[1]+",");
+        sb.append("\"ph\":"+values[2]+"}");
+        return sb.toString();
     }
 
 
