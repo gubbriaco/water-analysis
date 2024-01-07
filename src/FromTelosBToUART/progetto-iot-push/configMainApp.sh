@@ -50,6 +50,7 @@ generate_components() {
 	components TDSC;
 	components new Msp430SparkfunTDSC() as TDSsensorDriver;
 	components PHC;
+	components new Msp430SparkfunPHC() as PHsensorDriver;
 EOL
             ;;
         "sea")
@@ -58,12 +59,14 @@ EOL
 	components TDSC;
 	components new Msp430SparkfunTDSC() as TDSsensorDriver;
 	components PHC;
+	components new Msp430SparkfunPHC() as PHsensorDriver;
 EOL
             ;;
         "pool")
             cat <<EOL >> "$MAINAPP_DIR"
 	components TemperatureC;
 	components PHC;
+	components new Msp430SparkfunPHC() as PHsensorDriver;
 EOL
             ;;
         *)
@@ -99,6 +102,7 @@ generate_wirings() {
 	QualityParamC.TDS -> TDSC;
 	TDSC.TDSmeasure -> TDSsensorDriver.TDSreadInterface;
 	QualityParamC.PH -> PHC;
+	PHC.PHmeasure -> PHsensorDriver.PHreadInterface;
 EOL
             ;;
         "sea")
@@ -107,12 +111,14 @@ EOL
 	QualityParamC.TDS -> TDSC;
 	TDSC.TDSmeasure -> TDSsensorDriver.TDSreadInterface;
 	QualityParamC.PH -> PHC;
+	PHC.PHmeasure -> PHsensorDriver.PHreadInterface;
 EOL
             ;;
         "pool")
             cat <<EOL >> "$MAINAPP_DIR"
 	QualityParamC.Temperature -> TemperatureC;
 	QualityParamC.PH -> PHC;
+	PHC.PHmeasure -> PHsensorDriver.PHreadInterface;
 EOL
             ;;
         *)

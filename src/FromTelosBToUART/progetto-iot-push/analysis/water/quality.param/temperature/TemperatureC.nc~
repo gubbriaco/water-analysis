@@ -1,6 +1,6 @@
 /**
  * @file TemperatureC.nc
- * @brief Implementation of the TemperatureC module for obtaining temperature value in nesC on TinyOS.
+ * @brief Implementation of the TemperatureC module for obtaining Temperature value in nesC on TinyOS.
  * @author [gubbriaco, fnicoletti, agrandinetti]
  */
 
@@ -10,7 +10,7 @@
 
 /**
  * @module TemperatureC
- * @desc Module for retrieving temperature value.
+ * @desc Module for retrieving Temperature value.
  */
 module TemperatureC {
 
@@ -29,6 +29,7 @@ module TemperatureC {
 	uses {
         	interface Boot;
         	interface Leds;
+		interface Read<uint16_t> as Temperaturemeasure;
     	}
 
 }
@@ -62,9 +63,21 @@ implementation {
 	 * @return The temperature value.
 	 */
 	command uint16_t Temperature.get() {
-		// TODO: Implement code to retrieve the actual temperature value
-		temperature = 18;
+		// Trigger the TDS measurement
+		call Temperaturemeasure.read();
 		return temperature;
+	}
+	
+	
+	/**
+	 * @event Temperaturemeasure.readDone
+	 * @desc Event triggered when the temperature measurement is completed.
+	 * @param result The result of the temperature measurement.
+	 * @param data The temperature value obtained from the measurement.
+	 */
+	event void Temperaturemeasure.readDone(error_t result, uint16_t data) {
+		// Store the temperature value obtained from the measurement
+		temperature = data;
 	}
 
 }

@@ -29,6 +29,7 @@ module PHC {
 	uses {
         	interface Boot;
         	interface Leds;
+		interface Read<uint16_t> as PHmeasure;
     	}
 
 }
@@ -48,15 +49,35 @@ implementation {
 		// Add initialization code if needed.
 	}
 	
+	
+	/**
+	 * @var ph
+	 * @desc Declaration of variable to store pH value.
+	 */
+	uint16_t ph;
+	
+	
 	/**
 	 * @command PH.get
-	 * @desc Retrieves the pH value through the PH interface.
+	 * @desc Retrieves the pH value through the pH interface.
 	 * @return The pH value.
 	 */
 	command uint16_t PH.get() {
-		// TODO: Implement code to retrieve the actual pH value
-		uint16_t pH = 7.1;
-		return pH;
+		// Trigger the pH measurement
+		call PHmeasure.read();
+		return ph;
+	}
+	
+	
+	/**
+	 * @event PHmeasure.readDone
+	 * @desc Event triggered when the pH measurement is completed.
+	 * @param result The result of the pH measurement.
+	 * @param data The pH value obtained from the measurement.
+	 */
+	event void PHmeasure.readDone(error_t result, uint16_t data) {
+		// Store the pH value obtained from the measurement
+		ph = data;
 	}
 
 }

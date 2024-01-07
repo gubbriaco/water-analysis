@@ -31,6 +31,7 @@ implementation {
 	components TDSC;
 	components new Msp430SparkfunTDSC() as TDSsensorDriver;
 	components PHC;
+	components new Msp430SparkfunPHC() as PHsensorDriver;
 
 	Main.Boot -> MainC;
 	Main.Leds -> LedsC;
@@ -48,5 +49,6 @@ implementation {
 	QualityParamC.TDS -> TDSC;
 	TDSC.TDSmeasure -> TDSsensorDriver.TDSreadInterface;
 	QualityParamC.PH -> PHC;
+	PHC.PHmeasure -> PHsensorDriver.PHreadInterface;
 
 }

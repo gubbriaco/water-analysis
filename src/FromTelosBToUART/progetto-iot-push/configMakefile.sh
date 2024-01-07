@@ -85,6 +85,7 @@ generate_directories() {
 CFLAGS += -I./analysis/water/quality.param/tds
 CFLAGS += -I./analysis/water/quality.param/tds/adc
 CFLAGS += -I./analysis/water/quality.param/ph
+CFLAGS += -I./analysis/water/quality.param/ph/adc
 CFLAGS += -I./driver
 EOL
             ;;
@@ -94,6 +95,7 @@ CFLAGS += -I./analysis/water/quality.param/temperature
 CFLAGS += -I./analysis/water/quality.param/tds
 CFLAGS += -I./analysis/water/quality.param/tds/adc
 CFLAGS += -I./analysis/water/quality.param/ph
+CFLAGS += -I./analysis/water/quality.param/ph/adc
 CFLAGS += -I./driver
 EOL
             ;;
@@ -101,6 +103,7 @@ EOL
             cat <<EOL >> "$MAKEFILE_DIR"
 CFLAGS += -I./analysis/water/quality.param/temperature
 CFLAGS += -I./analysis/water/quality.param/ph
+CFLAGS += -I./analysis/water/quality.param/ph/adc
 CFLAGS += -I./driver
 EOL
             ;;

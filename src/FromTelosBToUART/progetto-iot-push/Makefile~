@@ -25,6 +25,7 @@ CFLAGS += -I./analysis/water/quality.param/temperature
 CFLAGS += -I./analysis/water/quality.param/tds
 CFLAGS += -I./analysis/water/quality.param/tds/adc
 CFLAGS += -I./analysis/water/quality.param/ph
+CFLAGS += -I./analysis/water/quality.param/ph/adc
 CFLAGS += -I./driver
 
 include $(MAKERULES)
