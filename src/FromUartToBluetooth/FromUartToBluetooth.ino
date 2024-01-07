@@ -40,9 +40,10 @@ void setup() {
 
   // Determine the environment and process sensor data
   if (ENVIRONMENT == HOME) {
-    TDS_POS=0;
-    PH_POS=1;
-    dataArrayLength = 2;
+    TEMPERATURE_POS=0;
+    TDS_POS=1;
+    PH_POS=2;
+    dataArrayLength = 3;
   } else if (ENVIRONMENT == POOL) {
     TEMPERATURE_POS=0;
     PH_POS=1;
@@ -109,15 +110,15 @@ void loop() {
       
       // Transmit sensor data via Bluetooth based on the current environment
       if (ENVIRONMENT == HOME) {
-        serialEnvironmentBased("NULL", String(tds), String(ph));
+        serialEnvironmentBased(temperature, tds, ph);
         successfullyBluetooth();
 
       } else if (ENVIRONMENT == POOL) {
-        serialEnvironmentBased(String(temperature), "NULL", String(ph));
+        serialEnvironmentBased(temperature, -1, ph);
         successfullyBluetooth();
 
       } else if (ENVIRONMENT == SEA) {
-        serialEnvironmentBased(String(temperature), String(tds), String(ph));
+        serialEnvironmentBased(temperature, tds, ph);
         successfullyBluetooth();
 
       } else {
@@ -145,7 +146,7 @@ void loop() {
  * @param tds The Total Dissolved Solids (TDS) data to be printed and transmitted.
  * @param ph The pH data to be printed and transmitted.
  */
-void serialEnvironmentBased(String temperature, String tds, String ph) {
+void serialEnvironmentBased(float temperature, float tds, float ph) {
   // Call serialPrint to print data to the Serial monitor
   serialPrint(temperature, tds, ph);
   
@@ -161,17 +162,31 @@ void serialEnvironmentBased(String temperature, String tds, String ph) {
  * @param tds The Total Dissolved Solids (TDS) data to be printed.
  * @param ph The pH data to be printed.
  */
-void serialPrint(String temperature, String tds, String ph) {
-  Serial.print("Temperature = ");
-  Serial.print(temperature);
-  Serial.println(" °C");
-       
-  Serial.print("TDS = ");
-  Serial.print(tds);
-  Serial.println(" PPM");
-  
-  Serial.print("pH = ");
-  Serial.println(ph);
+void serialPrint(float temperature, float tds, float ph) {
+  if (temperature == -1) {
+    Serial.print("Temperature = ");
+    Serial.print("NULL");
+    Serial.println(" °C");
+  } else if (tds == -1) {
+    Serial.print("TDS = ");
+    Serial.print("NULL");
+    Serial.println(" PPM");
+  } else if (ph == -1) {
+    Serial.print("pH = ");
+    Serial.println("NULL");
+  } else {
+    Serial.print("Temperature = ");
+    Serial.print(temperature);
+    Serial.println(" °C");
+        
+    Serial.print("TDS = ");
+    Serial.print(tds);
+    Serial.println(" PPM");
+    
+    Serial.print("pH = ");
+    Serial.println(ph);
+  }
+ 
 }
 
 
@@ -182,15 +197,24 @@ void serialPrint(String temperature, String tds, String ph) {
  * @param tds The Total Dissolved Solids (TDS) data to be transmitted.
  * @param ph The pH data to be transmitted.
  */
-void sendViaBluetooth(String temperature, String tds, String ph) {
-  // Transmit temperature, TDS, and pH data via Bluetooth with ',' as separator and ';' as the end marker
-  bluetoothSerial.print(temperature);
+void sendViaBluetooth(float temperature, float tds, float ph) {
+  if (temperature == -1) {
+    bluetoothSerial.print("NULL");
+  } else {
+    bluetoothSerial.print(temperature);
+  }
   bluetoothSerial.print(",");
-
-  bluetoothSerial.print(tds);
+  if (tds == -1) {
+    bluetoothSerial.print("NULL");
+  } else {
+    bluetoothSerial.print(tds);
+  }
   bluetoothSerial.print(",");
-
-  bluetoothSerial.print(ph);
+  if (ph == -1) {
+    bluetoothSerial.println("NULL");
+  } else {
+    bluetoothSerial.print(ph);
+  }
   bluetoothSerial.print(";");
 }
 
@@ -203,7 +227,7 @@ void sendViaBluetooth(String temperature, String tds, String ph) {
  * @param countMeasures The count of temperature measurements.
  * @return The average temperature.
  */
-float getTemperatureAverage(int temperature, int countMeasures) {
+float getTemperatureAverage(float temperature, int countMeasures) {
   // Calculate average temperature, TDS, and pH
   float temperatureAverage = temperature = temperature / countMeasures;
   return temperatureAverage;
@@ -219,7 +243,7 @@ float getTemperatureAverage(int temperature, int countMeasures) {
  * @param temperature The corresponding temperature for TDS compensation.
  * @return The compensated average TDS.
  */
-float getTotalDissolvedMetalsAverage(int tds, int countMeasures, int temperature) {
+float getTotalDissolvedMetalsAverage(float tds, int countMeasures, float temperature) {
   // Convert TDS readings to compensated values based on temperature
   float tdsAverage = tds / countMeasures;
   float averageVoltage = (tdsAverage * V_REF) / RESOLUTION;
@@ -238,7 +262,7 @@ float getTotalDissolvedMetalsAverage(int tds, int countMeasures, int temperature
  * @param countMeasures The count of pH measurements.
  * @return The average pH.
  */
-float getpHAverage(int ph, int countMeasures) {
+float getpHAverage(float ph, int countMeasures) {
   float phAverage = ph / countMeasures;
   return phAverage;
 }
@@ -378,10 +402,11 @@ void readFromUART(int data[]) {
  * @param tdsValue The current Total Dissolved Solids (TDS) value to be processed and updated.
  * @param phValue The current pH value to be processed and updated.
  */
-void processingQualityParams(int data[], int temperatureValue, int tdsValue, int phValue) {
+void processingQualityParams(int data[], float temperatureValue, float tdsValue, float phValue) {
   // Environment-dependent data processing
   if (ENVIRONMENT == HOME) {
-    // Update TDS and pH values for home environment
+    // Update temperature, TDS, and pH values for home environment
+    temperatureValue = readWaterTemperature();
     tdsValue = readWaterTDS(data);
     phValue = readWaterPH(data);
 
@@ -421,6 +446,7 @@ float readWaterTemperature() {
   waterTemperatureSensor.requestTemperatures();
   // Get value from sensor
   float temperature_curr = waterTemperatureSensor.getTempCByIndex(0);
+  Serial.println(temperature_curr);
   return temperature_curr;
 }
 
@@ -439,7 +465,7 @@ float readWaterPH(int data[]) {
   
   // Converts the analog pH reading to actual pH using the calibration formula
   float ph_curr = (SLOPE_PH * adc_pH) + INTERCEPT_PH;
-  
+  Serial.println(ph_curr);
   return ph_curr;
 }
 

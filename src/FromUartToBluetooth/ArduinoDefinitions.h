@@ -3,6 +3,16 @@
 
 
 
+/**
+  * ENVIRONMENT = 0 -> HOME
+  * ENVIRONMENT = 1 -> POOL
+  * ENVIRONMENT = 2 -> SEA
+*/
+#define ENVIRONMENT 2
+#define HOME 0
+#define POOL 1
+#define SEA 2
+
 
 // Number of sensors
 #define NR_SENSORS 3
@@ -42,16 +52,6 @@
 #define BT_RX_PIN 10
 
 
-/**
-  * ENVIRONMENT = 0 -> HOME
-  * ENVIRONMENT = 1 -> POOL
-  * ENVIRONMENT = 2 -> SEA
-*/
-#define ENVIRONMENT 2
-#define HOME 0
-#define POOL 1
-#define SEA 2
-
 
 // Define pins for successfully UART communication indicators
 #define SUCCESSFULLY_UART_PIN 7
@@ -80,6 +80,7 @@ void successfullyBluetooth();
   * Indicate failure in Bluetooth communication.
 */
 void failureBluetooth();
+
 
 #define ONE_WIRE_BUS_WATER_TEMPERATURE 3
 
@@ -115,13 +116,25 @@ float readWaterTDS(int data[]);
  */
 void readFromSensors(int data[]);
 
+
 /**
  * Reads data from UART communication and processes it to update environmental parameters.
  * This function expects data packets with a Start of Packet (SOP) and End of Packet (EOP) markers.
  * The received data is parsed and used to update temperature, TDS, and pH values.
  * @param data An array containing sensor readings.
  */
-void readQualityParams(int data[]);
+void readFromUART(int data[]);
+
+
+/**
+ * Processes and updates environmental quality parameters based on the provided data and current environment.
+ *
+ * @param data An array containing sensor readings.
+ * @param temperatureValue The current temperature value to be processed and updated.
+ * @param tdsValue The current Total Dissolved Solids (TDS) value to be processed and updated.
+ * @param phValue The current pH value to be processed and updated.
+ */
+void processingQualityParams(int data[], float temperatureValue, float tdsValue, float phValue);
 
 
 // Temperature lower bound and upper bound
@@ -155,8 +168,69 @@ void readQualityParams(int data[]);
 #define LED_DELAY 750
 
 
+/**
+ * Prints environmental data to the Serial monitor and transmits it via Bluetooth.
+ *
+ * @param temperature The temperature data to be printed and transmitted.
+ * @param tds The Total Dissolved Solids (TDS) data to be printed and transmitted.
+ * @param ph The pH data to be printed and transmitted.
+ */
+void serialEnvironmentBased(float temperature, float tds, float ph);
+
+
+/**
+ * Prints environmental data to the Serial monitor.
+ *
+ * @param temperature The temperature data to be printed.
+ * @param tds The Total Dissolved Solids (TDS) data to be printed.
+ * @param ph The pH data to be printed.
+ */
+void serialPrint(float temperature, float tds, float ph);
+
+
+/**
+ * Sends environmental data via Bluetooth.
+ *
+ * @param temperature The temperature data to be transmitted.
+ * @param tds The Total Dissolved Solids (TDS) data to be transmitted.
+ * @param ph The pH data to be transmitted.
+ */
+void sendViaBluetooth(float temperature, float tds, float ph);
+
+
+/**
+ * Calculates and returns the average temperature based on the accumulated temperature values
+ * and the count of temperature measurements.
+ *
+ * @param temperature The sum of temperature values.
+ * @param countMeasures The count of temperature measurements.
+ * @return The average temperature.
+ */
+float getTemperatureAverage(float temperature, int countMeasures);
+
+
+/**
+ * Calculates and returns the compensated average Total Dissolved Solids (TDS) based on the
+ * accumulated TDS values, the count of TDS measurements, and the corresponding temperature.
+ *
+ * @param tds The sum of TDS values.
+ * @param countMeasures The count of TDS measurements.
+ * @param temperature The corresponding temperature for TDS compensation.
+ * @return The compensated average TDS.
+ */
+float getTotalDissolvedMetalsAverage(float tds, int countMeasures, float temperature);
+
+
+/**
+ * Calculates and returns the average pH based on the accumulated pH values
+ * and the count of pH measurements.
+ *
+ * @param ph The sum of pH values.
+ * @param countMeasures The count of pH measurements.
+ * @return The average pH.
+ */
+float getpHAverage(float ph, int countMeasures);
+
+
 
 #endif
-
-
-
