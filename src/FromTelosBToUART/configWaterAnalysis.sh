@@ -62,9 +62,10 @@ generate_variables() {
         "home")
             cat <<EOL >> "$WATERANALYSIS_DIR"
 	/** 
-	 * @var tds, pH
+	 * @var temperature, tds, pH
 	 * @desc Declaration of variables for quality parameters.
 	 */
+	uint16_t temperature = -1;
 	uint16_t tds = -1;
 	uint16_t pH = -1;
 EOL
@@ -126,6 +127,10 @@ generate_getters() {
     case $arg1 in
         "home")
             cat <<EOL >> "$WATERANALYSIS_DIR"
+		// Retrieve temperature and store in QualityParams array
+		temperature = call QualityParam.get(TEMPERATURE_POS);
+		QualityParams[TEMPERATURE_POS] = temperature;
+		
 		// Retrieve TDS and store in QualityParams array
 		tds = call QualityParam.get(TDS_POS);
 		QualityParams[TDS_POS] = tds;

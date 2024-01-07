@@ -47,7 +47,8 @@ generate_uses() {
     case $arg1 in
         "home")
             cat <<EOL >> "$QUALITYPARAMC_DIR"
-		interface TDS;
+		interface Temperature;
+        	interface TDS;
         	interface PH;
 EOL
             ;;
@@ -110,7 +111,9 @@ generate_paramtype() {
     case $arg1 in
         "home")
             cat <<EOL >> "$QUALITYPARAMC_DIR"
-		if (ParamType == TDS_POS) {
+		if (ParamType == TEMPERATURE_POS) {
+			return call Temperature.get();
+		} else if (ParamType == TDS_POS) {
 			return call TDS.get();
 		} else {
 			return call PH.get();

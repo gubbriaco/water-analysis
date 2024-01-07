@@ -71,7 +71,7 @@ generate_array() {
     case $arg1 in
         "home")
             cat <<EOL >> "$MAIN_DIR"
-	uint16_t QualityParams[NR_QUALITY_PARAMS] = {-1, -1};
+	uint16_t QualityParams[NR_QUALITY_PARAMS] = {-1, -1, -1};
 EOL
             ;;
         "sea")

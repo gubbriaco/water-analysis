@@ -33,11 +33,12 @@ generate_constants() {
     case $arg1 in
         "home")
             cat <<EOL >> "$MAKEFILE_DIR"
-CFLAGS += -DUARTdata_DIM=7
-CFLAGS += -DNR_QUALITY_PARAMS=2
-CFLAGS += -DTDS_POS=0
-CFLAGS += -DPH_POS=1
-CFLAGS += -DEOP_POS=5
+CFLAGS += -DUARTdata_DIM=9
+CFLAGS += -DNR_QUALITY_PARAMS=3
+CFLAGS += -DTEMPERATURE_POS=0
+CFLAGS += -DTDS_POS=1
+CFLAGS += -DPH_POS=2
+CFLAGS += -DEOP_POS=7
 EOL
             ;;
         "sea")
@@ -82,6 +83,8 @@ generate_directories() {
     case $arg1 in
         "home")
             cat <<EOL >> "$MAKEFILE_DIR"
+CFLAGS += -I./analysis/water/quality.param/temperature
+CFLAGS += -I./analysis/water/quality.param/temperature/adc
 CFLAGS += -I./analysis/water/quality.param/tds
 CFLAGS += -I./analysis/water/quality.param/tds/adc
 CFLAGS += -I./analysis/water/quality.param/ph
@@ -92,6 +95,7 @@ EOL
         "sea")
             cat <<EOL >> "$MAKEFILE_DIR"
 CFLAGS += -I./analysis/water/quality.param/temperature
+CFLAGS += -I./analysis/water/quality.param/temperature/adc
 CFLAGS += -I./analysis/water/quality.param/tds
 CFLAGS += -I./analysis/water/quality.param/tds/adc
 CFLAGS += -I./analysis/water/quality.param/ph
@@ -102,6 +106,7 @@ EOL
         "pool")
             cat <<EOL >> "$MAKEFILE_DIR"
 CFLAGS += -I./analysis/water/quality.param/temperature
+CFLAGS += -I./analysis/water/quality.param/temperature/adc
 CFLAGS += -I./analysis/water/quality.param/ph
 CFLAGS += -I./analysis/water/quality.param/ph/adc
 CFLAGS += -I./driver

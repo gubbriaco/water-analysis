@@ -120,16 +120,18 @@ generate_packet() {
     case $arg1 in
         "home")
             cat <<EOL >> "$UARTDRIVER_DIR"
-		DataUart[2] = QualityParameters[TDS_POS] >> 8; // MSB
-		DataUart[1] = QualityParameters[TDS_POS] & 0xff; // LSB
-		DataUart[4] = QualityParameters[PH_POS] >> 8; // MSB
-		DataUart[3] = QualityParameters[PH_POS] & 0xff; // LSB
+		DataUart[2] = QualityParameters[TEMPERATURE_POS] >> 8; // MSB
+		DataUart[1] = QualityParameters[TEMPERATURE_POS] & 0xff; // LSB
+		DataUart[4] = QualityParameters[TDS_POS] >> 8; // MSB
+		DataUart[3] = QualityParameters[TDS_POS] & 0xff; // LSB
+		DataUart[6] = QualityParameters[PH_POS] >> 8; // MSB
+		DataUart[5] = QualityParameters[PH_POS] & 0xff; // LSB
 		
 		// Request the resource before sending data
 		call Resource.request();
 		
 		// Print the data to be sent for debugging
-		printf("data_to_arduino = %d, %d\n", QualityParameters[TDS_POS], QualityParameters[PH_POS]);
+		printf("data_to_arduino = %d, %d, %d\n", QualityParameters[TEMPERATURE_POS], QualityParameters[TDS_POS], QualityParameters[PH_POS]);
 EOL
             ;;
         "sea")
