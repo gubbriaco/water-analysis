@@ -4,73 +4,15 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-// Define Start of Packet (SOP) and End of Packet (EOP) characters
-#define SOP '<'
-#define EOP '>'
-#define LENGTH 9
+#include "ArduinoDefinitions.h"
 
-// Define UART pin configuration
-#define UART_TX_PIN 9
-#define UART_RX_PIN 8
+
 AltSoftSerial uartSerial;
 
-// Define Bluetooth pin configuration
-#define BT_TX_PIN 11
-#define BT_RX_PIN 10
-SoftwareSerial bluetoothSerial(BT_RX_PIN, BT_TX_PIN); // RX, TX
+SoftwareSerial bluetoothSerial(BT_RX_PIN, BT_TX_PIN);
 
-/**
-  * ENVIRONMENT = 0 -> HOME
-  * ENVIRONMENT = 1 -> POOL
-  * ENVIRONMENT = 2 -> SEA
-*/
-#define ENVIRONMENT 2
-#define HOME 0
-#define POOL 1
-#define SEA 2
-
-
-// Define pins for successfully UART communication indicators
-#define SUCCESSFULLY_UART_PIN 7
-/**
-  * Indicate successful UART communication.
-*/
-void successfullyUART();
-
-// Define pins for failure in UART communication indicators
-#define FAILURE_UART_PIN 6
-/**
-  * Indicate failure in UART communication.
-*/
-void failureUART();
-
-// Define pins for successfully Bluetooth communication indicators
-#define SUCCESSFULLY_BLUETOOTH_PIN 5
-/**
-  * Indicate successful Bluetooth communication.
-*/
-void successfullyBluetooth();
-
-// Define pins for failure in Bluetooth communication indicators
-#define FAILURE_BLUETOOTH_PIN 4
-/**
-  * Indicate failure in Bluetooth communication.
-*/
-void failureBluetooth();
-
-
-#define ONE_WIRE_BUS_WATER_TEMPERATURE 3
 OneWire oneWireWaterTemperature(ONE_WIRE_BUS_WATER_TEMPERATURE);
 DallasTemperature waterTemperatureSensor(&oneWireWaterTemperature);
-float readWaterTemperature();
-
-float readWaterPH();
-
-float readWaterTDS();
-
-
-void readFromSensors(int data[]);
-void readQualityParams(int data[]);
 
 int error;
 int count;
@@ -80,18 +22,19 @@ int TDS_POS;
 int PH_POS;
 int dataArrayLength;
 
+
 /**
   * Setup function to initialize serial communication.
 */
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(BAUD_RATE);
   while (!Serial) {
   }
 
-  uartSerial.begin(9600);
+  uartSerial.begin(BAUD_RATE);
   error = 1;
   count = 0;
-  bluetoothSerial.begin(9600);
+  bluetoothSerial.begin(BAUD_RATE);
 
   waterTemperatureSensor.begin();
 
@@ -113,6 +56,7 @@ void setup() {
 
 }
 
+
 float temperature = 0;
 float tds = 0;
 float ph = 0;
@@ -124,97 +68,68 @@ float phLast = 0;
 int ack_sent = -1;
 
 int countMeasures = 0;
+int initialisationCount = 0;
 
-#define READS 10
 
 void loop() {
 
+    // An array containing sensor readings.
     int data[dataArrayLength];
     
+    // Check if there was an error during sensor initialization
     if (error==1) {
-      Serial.println("Sensor initialising.");
-      delay(1024);
+      if (initialisationCount == 0) {
+        Serial.println("");
+        Serial.print("Sensor initialising.");
+        initialisationCount = initialisationCount + 1;
+      }
+      delay(SAMPLING_TIME_SENSORS_INITIALISATION);
       count = count + 1;
+      Serial.print(".");
+      // If the maximum number of initialization attempts (READS) is reached, reset the error flag
       if (count == READS) {
         error = 0;
       }
     } else if (error == 0) {
-        
-      Serial.println("----------------------------------------------------------");
+      Serial.println("");
+      Serial.println("################################");
 
+      // Read sensor data multiple times to calculate averages
       for(int i=0; i<READS; i++) {
         readFromSensors(data);
       }
       
-      temperature = temperature / countMeasures;
-      tds = tds / countMeasures;
-      float V_REF = 2.5;
-      float RESOLUTION = 4095;
-      float averageVoltage = (tds * V_REF) / RESOLUTION;
-      float compensationCoefficient = 1.0 + 0.02 * (temperature - 25.0);
-      float compensationVoltage = averageVoltage / compensationCoefficient;
-      float tdscompensated = (133.42 * compensationVoltage * compensationVoltage * compensationVoltage - 255.86 * compensationVoltage * compensationVoltage + 857.39 * compensationVoltage) * 0.5;
-      ph = ph / countMeasures;
+      // Calculate average temperature
+      temperature = getTemperatureAverage(temperature, countMeasures);
+      // Convert TDS readings to compensated values based on temperature
+      tds = getTotalDissolvedMetalsAverage(tds, countMeasures, temperature);
+      // Calculate average pH
+      ph = getpHAverage(ph, countMeasures);
 
       
-      // Transmit sensor data via Bluetooth
+      // Transmit sensor data via Bluetooth based on the current environment
       if (ENVIRONMENT == HOME) {
-        Serial.print("TDS = ");
-        Serial.print(tdscompensated);
-        Serial.println(" PPM");
-        bluetoothSerial.print(tdscompensated);
-        bluetoothSerial.print(",");
-
-        Serial.print("pH = ");
-        Serial.println(ph);
-        bluetoothSerial.print(ph);
-        bluetoothSerial.print(";");
-
+        serialEnvironmentBased("NULL", String(tds), String(ph));
         successfullyBluetooth();
 
       } else if (ENVIRONMENT == POOL) {
-        Serial.print("Temperature = ");
-        Serial.print(temperature);
-        Serial.println(" °C");
-        bluetoothSerial.print(temperature);
-        bluetoothSerial.print(",");
-
-        Serial.print("pH = ");
-        Serial.println(ph);
-        bluetoothSerial.print(ph);
-        bluetoothSerial.print(";");
-
+        serialEnvironmentBased(String(temperature), "NULL", String(ph));
         successfullyBluetooth();
 
       } else if (ENVIRONMENT == SEA) {
-        Serial.print("Temperature = ");
-        Serial.print(temperature);
-        Serial.println(" °C");
-        bluetoothSerial.print(temperature);
-        bluetoothSerial.print(",");
-        
-        Serial.print("TDS = ");
-        Serial.print(tdscompensated);
-        Serial.println(" PPM");
-        bluetoothSerial.print(tdscompensated);
-        bluetoothSerial.print(",");
-
-        Serial.print("pH = ");
-        Serial.println(ph);
-        bluetoothSerial.print(ph);
-        bluetoothSerial.print(";");
-
+        serialEnvironmentBased(String(temperature), String(tds), String(ph));
         successfullyBluetooth();
 
       } else {
+        // If the environment is not recognized, indicate a Bluetooth failure
         failureBluetooth();
-
       }
 
       delay(20);
       
     }
 
+    // Reset variables for the next set of measurements
     temperature = 0;
     tds = 0;
     ph = 0;
@@ -222,48 +137,175 @@ void loop() {
 
 }
 
+
+/**
+ * Prints environmental data to the Serial monitor and transmits it via Bluetooth.
+ *
+ * @param temperature The temperature data to be printed and transmitted.
+ * @param tds The Total Dissolved Solids (TDS) data to be printed and transmitted.
+ * @param ph The pH data to be printed and transmitted.
+ */
+void serialEnvironmentBased(String temperature, String tds, String ph) {
+  // Call serialPrint to print data to the Serial monitor
+  serialPrint(temperature, tds, ph);
+  
+  // Call sendViaBluetooth to transmit data via Bluetooth
+  sendViaBluetooth(temperature, tds, ph);
+}
+
+
+/**
+ * Prints environmental data to the Serial monitor.
+ *
+ * @param temperature The temperature data to be printed.
+ * @param tds The Total Dissolved Solids (TDS) data to be printed.
+ * @param ph The pH data to be printed.
+ */
+void serialPrint(String temperature, String tds, String ph) {
+  Serial.print("Temperature = ");
+  Serial.print(temperature);
+  Serial.println(" °C");
+       
+  Serial.print("TDS = ");
+  Serial.print(tds);
+  Serial.println(" PPM");
+  
+  Serial.print("pH = ");
+  Serial.println(ph);
+}
+
+
+/**
+ * Sends environmental data via Bluetooth.
+ *
+ * @param temperature The temperature data to be transmitted.
+ * @param tds The Total Dissolved Solids (TDS) data to be transmitted.
+ * @param ph The pH data to be transmitted.
+ */
+void sendViaBluetooth(String temperature, String tds, String ph) {
+  // Transmit temperature, TDS, and pH data via Bluetooth with ',' as separator and ';' as the end marker
+  bluetoothSerial.print(temperature);
+  bluetoothSerial.print(",");
+
+  bluetoothSerial.print(tds);
+  bluetoothSerial.print(",");
+
+  bluetoothSerial.print(ph);
+  bluetoothSerial.print(";");
+}
+
+
+/**
+ * Calculates and returns the average temperature based on the accumulated temperature values
+ * and the count of temperature measurements.
+ *
+ * @param temperature The sum of temperature values.
+ * @param countMeasures The count of temperature measurements.
+ * @return The average temperature.
+ */
+float getTemperatureAverage(int temperature, int countMeasures) {
+  // Calculate average temperature, TDS, and pH
+  float temperatureAverage = temperature = temperature / countMeasures;
+  return temperatureAverage;
+}
+
+
+/**
+ * Calculates and returns the compensated average Total Dissolved Solids (TDS) based on the
+ * accumulated TDS values, the count of TDS measurements, and the corresponding temperature.
+ *
+ * @param tds The sum of TDS values.
+ * @param countMeasures The count of TDS measurements.
+ * @param temperature The corresponding temperature for TDS compensation.
+ * @return The compensated average TDS.
+ */
+float getTotalDissolvedMetalsAverage(int tds, int countMeasures, int temperature) {
+  // Convert TDS readings to compensated values based on temperature
+  float tdsAverage = tds / countMeasures;
+  float averageVoltage = (tdsAverage * V_REF) / RESOLUTION;
+  float compensationCoefficient = 1.0 + 0.02 * (temperature - 25.0);
+  float compensationVoltage = averageVoltage / compensationCoefficient;
+  float tdscompensated = (133.42 * compensationVoltage * compensationVoltage * compensationVoltage - 255.86 * compensationVoltage * compensationVoltage + 857.39 * compensationVoltage) * 0.5;
+  return tdscompensated;
+}
+
+
+/**
+ * Calculates and returns the average pH based on the accumulated pH values
+ * and the count of pH measurements.
+ *
+ * @param ph The sum of pH values.
+ * @param countMeasures The count of pH measurements.
+ * @return The average pH.
+ */
+float getpHAverage(int ph, int countMeasures) {
+  float phAverage = ph / countMeasures;
+  return phAverage;
+}
+
+
+/**
+ * Reads data from sensors using UART communication and updates environmental parameters.
+ *
+ * @param data An array to store the sensor readings.
+ */
 void readFromSensors(int data[]) {
-  readQualityParams(data);
+  // Read data from UART communication
+  readFromUART(data);
+
+  // Check the acknowledgment status (ack_sent) for successful data transmission
   if (ack_sent == 0) {
+    // If acknowledgment indicates failure, subtract the last measurements from cumulative values
     temperature = temperature - temperatureLast;
     tds = tds - tdsLast;
     ph = ph - phLast;
-  } else if(ack_sent == 1) {
-    if (temperatureLast < -55) {
+  } 
+  // If acknowledgment indicates success, validate and update the cumulative values
+  else if(ack_sent == 1) {
+    if (temperatureLast < TEMPERATURE_LOWER_BOUND) {
       temperature = temperature - temperatureLast;
     }
-    if (temperatureLast > 125) {
+    if (temperatureLast > TEMPERATURE_UPPER_BOUND) {
       temperature = temperature - temperatureLast;
     }
-    if (tdsLast < 0) {
+    if (tdsLast < TDS_LOWER_BOUND) {
       tds = tds - tdsLast;
     }
-    if (tdsLast > 1000) {
+    if (tdsLast > TDS_UPPER_BOUND) {
       tds = tds - tdsLast;
     }
-    if (phLast < 0) {
+    if (phLast < PH_LOWER_BOUND) {
       ph = ph - phLast;
     }
-    if (phLast > 14) {
+    if (phLast > PH_UPPER_BOUND) {
       ph = ph - phLast;
     }
+    // Increment the count of successful measurements
     countMeasures = countMeasures + 1;
   }
 }
 
 
-void readQualityParams(int data[]) {
-  delay(1024);
+/**
+ * Reads data from UART communication and processes it to update environmental parameters.
+ * This function expects data packets with a Start of Packet (SOP) and End of Packet (EOP) markers.
+ * The received data is parsed and used to update temperature, TDS, and pH values.
+ * @param data An array containing sensor readings.
+ */
+void readFromUART(int data[]) {
+  delay(SAMPLING_TIME_UART);
 
-  // Flag per inizio e fine
+  // Flags for start and end
   bool started = false;
   bool ended = false;
 
+  // Buffer to store incoming data
   char inData[LENGTH];
   byte index;
   byte dataTransmitted[2];
   int ack;
 
+  // Variables to store parsed data
   float temperatureValue;
   int tdsValue;
   float phValue;
@@ -272,14 +314,17 @@ void readQualityParams(int data[]) {
   while (uartSerial.available() > 0) {
     char inChar = uartSerial.read();
     if (inChar == SOP) {
+      // Start of Packet marker detected
       index = 0;
       inData[index] = '\0';
       started = true;
       ended = false;
     } else if (inChar == EOP) {
+      // End of Packet marker detected
       ended = true;
       break;
     } else {
+      // Store the incoming character in the buffer
       if (index < LENGTH) {
         inData[index] = inChar;
         index++;
@@ -290,12 +335,15 @@ void readQualityParams(int data[]) {
 
   // Process received data
   if (started && ended) {
-    for (int i = 0; i < 3; i++) {
+    // Parse and update data array
+    for (int i = 0; i < NR_SENSORS; i++) {
       data[i] = word(byte(inData[2 * i + 1]), byte(inData[2 * i]));
     }
+    // Acknowledge successful data reception
     ack = 1;
     successfullyUART();
   } else {
+    // Acknowledge failure in data reception
     ack = 0;
     failureUART();
   }
@@ -313,53 +361,99 @@ void readQualityParams(int data[]) {
   Serial.print("ack_sent = ");
   Serial.println(ack);
 
-  
-  // Transmit sensor data via Bluetooth
+  // Update last acknowledgment sent
+  ack_sent = ack;
+
+  // Process quality parameters based on the received data
+  processingQualityParams(data, temperatureValue, tdsValue, phValue);
+
+}
+
+ 
+/**
+ * Processes and updates environmental quality parameters based on the provided data and current environment.
+ *
+ * @param data An array containing sensor readings.
+ * @param temperatureValue The current temperature value to be processed and updated.
+ * @param tdsValue The current Total Dissolved Solids (TDS) value to be processed and updated.
+ * @param phValue The current pH value to be processed and updated.
+ */
+void processingQualityParams(int data[], int temperatureValue, int tdsValue, int phValue) {
+  // Environment-dependent data processing
   if (ENVIRONMENT == HOME) {
+    // Update TDS and pH values for home environment
     tdsValue = readWaterTDS(data);
     phValue = readWaterPH(data);
 
   } else if (ENVIRONMENT == POOL) {
+    // Update temperature and pH values for pool environment
     temperatureValue = readWaterTemperature();
     phValue = readWaterPH(data);
 
-
   } else if (ENVIRONMENT == SEA) {
+    // Update temperature, TDS, and pH values for sea environment
     temperatureValue = readWaterTemperature();
     tdsValue = readWaterTDS(data);
     phValue = readWaterPH(data);
 
   }
 
+  // Update last measured temperature, TDS, and pH values
   temperatureLast = temperatureValue;
   tdsLast = tdsValue;
   phLast = phValue;
 
+  // Add last measured values to the corresponding current sum
   temperature = temperature + temperatureLast;
   tds = tds + tdsLast;
-  ph = ph + phValue;
-
-  ack_sent = ack;
+  ph = ph + phLast;
 }
 
 
+
+/**
+ * Reads the water temperature using the temperature sensor.
+ *
+ * @return The current water temperature in degrees Celsius.
+ */
 float readWaterTemperature() {
+  // Requests temperature reading from the sensor
   waterTemperatureSensor.requestTemperatures();
+  // Get value from sensor
   float temperature_curr = waterTemperatureSensor.getTempCByIndex(0);
   return temperature_curr;
 }
 
 
+/**
+ * Reads the pH level of water based on the provided analog sensor data.
+ *
+ * @param data An array containing analog sensor readings, with pH data at index PH_POS.
+ * @return The current pH level of the water.
+ */
 float readWaterPH(int data[]) {
   // float adc_pH7 = 2.50;
+
+  // Extracts the pH analog reading from the provided data array
   float adc_pH = data[PH_POS];
-  float ph_curr = (-0.003875598 * adc_pH) + 16.3265548;
+  
+  // Converts the analog pH reading to actual pH using the calibration formula
+  float ph_curr = (SLOPE_PH * adc_pH) + INTERCEPT_PH;
+  
   return ph_curr;
 }
 
 
+/**
+ * Reads the Total Dissolved Solids (TDS) level of water based on the provided sensor data.
+ *
+ * @param data An array containing sensor readings, with TDS data at index TDS_POS.
+ * @return The current TDS level of the water.
+ */
 float readWaterTDS(int data[]) {
+  // Extracts the TDS reading from the provided data array
   float tds_curr = data[TDS_POS];
+  
   return tds_curr;
 }
 
@@ -369,7 +463,7 @@ float readWaterTDS(int data[]) {
 */
 void successfullyUART() {
   digitalWrite(SUCCESSFULLY_UART_PIN, HIGH);
-  delay(750);
+  delay(LED_DELAY);
   digitalWrite(SUCCESSFULLY_UART_PIN, LOW);
 }
 
@@ -379,7 +473,7 @@ void successfullyUART() {
 */
 void failureUART() {
   digitalWrite(FAILURE_UART_PIN, HIGH);
-  delay(750);
+  delay(LED_DELAY);
   digitalWrite(FAILURE_UART_PIN, LOW);
 }
 
@@ -389,7 +483,7 @@ void failureUART() {
 */
 void successfullyBluetooth() {
   digitalWrite(SUCCESSFULLY_BLUETOOTH_PIN, HIGH);
-  delay(750);
+  delay(LED_DELAY);
   digitalWrite(SUCCESSFULLY_BLUETOOTH_PIN, LOW);
 }
 
