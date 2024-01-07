@@ -105,13 +105,7 @@ public class HTTPPOST extends Thread {
             responseCode = httpsURLConnection.getResponseCode();
             Logging.msg("HTTP POST Response Code: " + responseCode);
 
-            // You can read the response from the server if needed:
-            // InputStream inputStream = connection.getInputStream();
-            // BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            // String line;
-            // while ((line = reader.readLine()) != null) {
-            //     Logging.msg(line);
-            // }
+
 
             httpsURLConnection.disconnect();
 

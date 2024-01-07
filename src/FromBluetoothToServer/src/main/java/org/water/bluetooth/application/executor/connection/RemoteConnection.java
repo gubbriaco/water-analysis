@@ -132,7 +132,7 @@ public class RemoteConnection extends Thread {
                                 // Get current date and time
                                 LocalDateTime currentTime = LocalDateTime.now();
                                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
+                
                                 // Received data via Bluetooth according to the environment in which the devices are
                                 // placed.
                                 EnvironmentType environment = getEnvironment();
