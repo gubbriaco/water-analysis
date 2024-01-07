@@ -446,7 +446,6 @@ float readWaterTemperature() {
   waterTemperatureSensor.requestTemperatures();
   // Get value from sensor
   float temperature_curr = waterTemperatureSensor.getTempCByIndex(0);
-  Serial.println(temperature_curr);
   return temperature_curr;
 }
 
@@ -465,7 +464,6 @@ float readWaterPH(int data[]) {
   
   // Converts the analog pH reading to actual pH using the calibration formula
   float ph_curr = (SLOPE_PH * adc_pH) + INTERCEPT_PH;
-  Serial.println(ph_curr);
   return ph_curr;
 }
 
