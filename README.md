@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Water Analysis project is dedicated to monitoring water quality parameters through the integration of a TelosB device, DS18B20 temperature sensor, TDS sensor, Arduino, and a platform (either a small computer or a specialized board) hosting a Bluetooth server. The TelosB is responsible for data collection from the sensors, transmitting it to the Arduino via UART. Subsequently, the Arduino, equipped with an HC-05 module, communicates the data via Bluetooth to a Java-based Bluetooth server using the BlueCove library.
+The Water Analysis project is dedicated to monitoring water quality parameters through the integration of a TelosB device, DS18B20 temperature sensor, TDS sensor, Arduino, and a platform (either a small computer or a specialized board) hosting a Bluetooth server. The TelosB is responsible for data collection from the sensors, transmitting it to the Arduino via UART. Subsequently, the Arduino, equipped with an HC-05 module, communicates the data via Bluetooth to a Java-based Bluetooth Base Station using the BlueCove library. Finally, HTTP requests will be made to a server considering the data collected from the Base Station.
 
 ## Project Components
 
@@ -12,7 +12,9 @@ The Water Analysis project is dedicated to monitoring water quality parameters t
 
 - **Arduino**: Acts as an intermediary, receiving data from the TelosB via UART and transmitting it via Bluetooth using an HC-05 module.
 
-- **Bluetooth Server (Java)**: Implemented in the `FromBluetoothToServer` directory. It accepts data from HC-05 modules concurrently, facilitating an HTTP POST request to a configurable server with customizable host and endpoints.
+- **Bluetooth Base Station (Java)**: Implemented in the `FromBluetoothToServer` directory. It accepts data from HC-05 modules concurrently, facilitating an HTTP request to a configurable server.
+
+- **Spring BootServer (Java)**: Implemented in the `server` directory. Handles HTTP requests from the Bluetooth Base Station.
 
 ## Setup Instructions
 
@@ -22,9 +24,11 @@ The Water Analysis project is dedicated to monitoring water quality parameters t
 
 3. **Arduino Configuration**: Utilize the code in `FromUartToBluetooth` to configure the Arduino to accept data from the TelosB via UART and transmit it to the Bluetooth server via HC-05.
 
-4. **Bluetooth Server Setup**: In the `FromBluetoothToServer` directory, find the Java source code for the Bluetooth server. Customize the code for host and endpoint settings.
+4. **Bluetooth Base Station Setup**: In the `FromBluetoothToServer` directory, find the Java source code for the Bluetooth Base Station. 
 
-5. **Additional Configuration**: Execute the AT command `AT+BIND=bluetooth_address`, replacing `bluetooth_address` with the Bluetooth address of the device running the Java Bluetooth server.
+5. **Bluetooth Base Station Setup**: In the `server` directory, find the Java source code for the server.
+
+6. **Additional Configuration**: Execute the AT command `AT+BIND=bluetooth_address`, replacing `bluetooth_address` with the Bluetooth address of the device running the Java Bluetooth Base Station.
 
 For detailed information, please contact [giorgioubbriaco@protonmail.com](mailto:giorgioubbriaco@protonmail.com).
 
@@ -34,7 +38,9 @@ Explore the `docs/` folder for datasheets related to sensors and boards employed
 
 ## Source Code
 
-- `src/FromBluetoothToServer/`: Java source code for the Bluetooth server.
+- `src/server/`: Java source code for the Spring Boot server.
+
+- `src/FromBluetoothToServer/`: Java source code for the Bluetooth Base Station.
   
 - `src/FromTelosBToUART/`: nesC source code for TelosB, collecting measurements and sending data via UART to Arduino.
   
