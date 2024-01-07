@@ -26,7 +26,7 @@ The Water Analysis project is dedicated to monitoring water quality parameters t
 
 4. **Bluetooth Base Station Setup**: In the `FromBluetoothToServer` directory, find the Java source code for the Bluetooth Base Station. 
 
-5. **Bluetooth Base Station Setup**: In the `server` directory, find the Java source code for the server.
+5. **Spring Boot Server Setup**: In the `server` directory, find the Java source code for the server.
 
 6. **Additional Configuration**: Execute the AT command `AT+BIND=bluetooth_address`, replacing `bluetooth_address` with the Bluetooth address of the device running the Java Bluetooth Base Station.
 
