@@ -23,9 +23,6 @@
 
 
 // Sampling time for sensors
-#define SAMPLING_TIME_SENSORS_INITIALISATION 1024
-
-// Sampling time for sensors
 #define SAMPLING_TIME_UART 1024
 
 // Sampling time for bluetooth
@@ -33,7 +30,7 @@
 
 
 // Number of reads for each average
-#define READS 10
+#define READS_BLUETOOTH 10
 
 
 // Define Start of Packet (SOP) and End of Packet (EOP) characters

@@ -14,8 +14,6 @@ SoftwareSerial bluetoothSerial(BT_RX_PIN, BT_TX_PIN);
 OneWire oneWireWaterTemperature(ONE_WIRE_BUS_WATER_TEMPERATURE);
 DallasTemperature waterTemperatureSensor(&oneWireWaterTemperature);
 
-int error;
-int count;
 
 int TEMPERATURE_POS;
 int TDS_POS;
@@ -32,8 +30,6 @@ void setup() {
   }
 
   uartSerial.begin(BAUD_RATE);
-  error = 1;
-  count = 0;
   bluetoothSerial.begin(BAUD_RATE);
 
   waterTemperatureSensor.begin();
@@ -69,7 +65,6 @@ float phLast = 0;
 int ack_sent = -1;
 
 int countMeasures = 0;
-int initialisationCount = 0;
 
 
 void loop() {
@@ -77,58 +72,44 @@ void loop() {
     // An array containing sensor readings.
     int data[dataArrayLength];
     
-    // Check if there was an error during sensor initialization
-    if (error==1) {
-      if (initialisationCount == 0) {
-        Serial.println("");
-        Serial.print("Sensor initialising.");
-        initialisationCount = initialisationCount + 1;
-      }
-      delay(SAMPLING_TIME_SENSORS_INITIALISATION);
-      count = count + 1;
-      Serial.print(".");
-      // If the maximum number of initialization attempts (READS) is reached, reset the error flag
-      if (count == READS) {
-        error = 0;
-      }
-    } else if (error == 0) {
-      Serial.println("");
-      Serial.println("################################");
+    
+    Serial.println("");
+    Serial.println("################################");
 
-      // Read sensor data multiple times to calculate averages
-      for(int i=0; i<READS; i++) {
-        readFromSensors(data);
-      }
-      
-      // Calculate average temperature
-      temperature = getTemperatureAverage(temperature, countMeasures);
-      // Convert TDS readings to compensated values based on temperature
-      tds = getTotalDissolvedMetalsAverage(tds, countMeasures, temperature);
-      // Calculate average pH
-      ph = getpHAverage(ph, countMeasures);
-
-      
-      // Transmit sensor data via Bluetooth based on the current environment
-      if (ENVIRONMENT == HOME) {
-        serialEnvironmentBased(temperature, tds, ph);
-        successfullyBluetooth();
-
-      } else if (ENVIRONMENT == POOL) {
-        serialEnvironmentBased(temperature, -1, ph);
-        successfullyBluetooth();
-
-      } else if (ENVIRONMENT == SEA) {
-        serialEnvironmentBased(temperature, tds, ph);
-        successfullyBluetooth();
-
-      } else {
-        // If the environment is not recognized, indicate a Bluetooth failure
-        failureBluetooth();
-      }
-
-      delay(20);
-      
+    // Read sensor data multiple times to calculate averages
+    for(int i=0; i<READS_BLUETOOTH; i++) {
+      readFromSensors(data);
     }
+    
+    // Calculate average temperature
+    temperature = getTemperatureAverage(temperature, countMeasures);
+    // Convert TDS readings to compensated values based on temperature
+    tds = getTotalDissolvedMetalsAverage(tds, countMeasures, temperature);
+    // Calculate average pH
+    ph = getpHAverage(ph, countMeasures);
+
+    
+    // Transmit sensor data via Bluetooth based on the current environment
+    if (ENVIRONMENT == HOME) {
+      serialEnvironmentBased(temperature, tds, ph);
+      successfullyBluetooth();
+
+    } else if (ENVIRONMENT == POOL) {
+      serialEnvironmentBased(temperature, -1, ph);
+      successfullyBluetooth();
+
+    } else if (ENVIRONMENT == SEA) {
+      serialEnvironmentBased(temperature, tds, ph);
+      successfullyBluetooth();
+
+    } else {
+      // If the environment is not recognized, indicate a Bluetooth failure
+      failureBluetooth();
+    }
+
+    delay(20);
+      
+    
 
     // Reset variables for the next set of measurements
     temperature = 0;
