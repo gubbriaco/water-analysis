@@ -30,7 +30,7 @@
 
 
 // Number of reads for each average
-#define READS_BLUETOOTH 10
+#define READS_BLUETOOTH 60
 
 
 // Define Start of Packet (SOP) and End of Packet (EOP) characters
