@@ -18,8 +18,12 @@ public class MisurationService {
     private MisurationRepository misurationRepository;
 
     @Transactional(readOnly = true)
-    public Page<Misuration> getAll(Pageable pageable){
+    public Page<Misuration> getAllPag(Pageable pageable){
         return misurationRepository.findAll(pageable);
+    }
+    @Transactional(readOnly = true)
+    public List<Misuration> getAll(){
+        return misurationRepository.findAll();
     }
     @Transactional(readOnly = true)
     public Misuration getByID(String id){

@@ -39,4 +39,8 @@ public class DeviceService {
     public void deleteDevice(Device device){
         deviceRepository.delete(device);
     }
+    @Transactional(readOnly = true)
+    public boolean existsByAddress(String address){
+        return deviceRepository.existsByAddress(address);
+    }
 }

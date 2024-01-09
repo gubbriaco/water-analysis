@@ -1,6 +1,7 @@
 package it.progetto.iotserver.controllers;
 
 import it.progetto.iotserver.entities.*;
+import it.progetto.iotserver.exception.DeviceNotFoundException;
 import it.progetto.iotserver.exception.MisurationNotFoundException;
 import it.progetto.iotserver.payload.request.CreateMisurationRequest;
 import it.progetto.iotserver.payload.response.MessageResponseData;
@@ -25,14 +26,18 @@ public class MisurationController {
     private MisurationService misurationService;
     @Autowired
     private DeviceService deviceService;
-
     @GetMapping
-    public ResponseEntity getAll(
+    public ResponseEntity getAll(){
+        return new ResponseEntity<>(misurationService.getAll(),HttpStatus.OK);
+    }
+
+    @GetMapping("/pag")
+    public ResponseEntity getAllPag(
                                  @RequestParam(defaultValue = "1") @Pattern(regexp = "\\d+", message = "Il parametro page deve essere un numero") String page,
                                  @RequestParam(defaultValue = "25") @Pattern(regexp = "\\d+", message = "Il parametro limit deve essere un numero") String limit,
                                  @RequestParam(defaultValue = "place") String orderBy){
         Pageable pageable = PageRequest.of(Integer.parseInt(page) - 1, Integer.parseInt(limit), Sort.by(orderBy));
-        Page<Misuration> pageList= misurationService.getAll(pageable);
+        Page<Misuration> pageList= misurationService.getAllPag(pageable);
         return new ResponseEntity(pageList, HttpStatus.OK);
     }
     @GetMapping("/{id}")
@@ -49,7 +54,7 @@ public class MisurationController {
     }
     @PostMapping
     public ResponseEntity saveMisuration(@RequestBody CreateMisurationRequest createMisurationRequest){
-        System.out.println(createMisurationRequest.getDeviceAddress());
+        if(!deviceService.existsByAddress(createMisurationRequest.getDeviceAddress())) throw new DeviceNotFoundException("Dispositivo sconosciuto: "+createMisurationRequest.getDeviceAddress());
         Device device= deviceService.getByAddress(createMisurationRequest.getDeviceAddress());
         Misuration misuration= new Misuration(device,createMisurationRequest.getTemperature(),
                 createMisurationRequest.getDissolvedMetals(),

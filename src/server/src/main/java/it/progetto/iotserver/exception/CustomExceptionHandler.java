@@ -42,4 +42,9 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponse error = new ErrorResponse("Il file deve essere massimo di 10 MB", HttpStatus.BAD_REQUEST, "400");
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+    @ExceptionHandler(DeviceNotFoundException.class)
+    public final ResponseEntity<Object> handleBadRequestException(Exception ex) {
+        ErrorResponse error = new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST, "400");
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
 }
