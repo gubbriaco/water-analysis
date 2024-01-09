@@ -123,13 +123,13 @@ public class RemoteConnection extends Thread {
                             // Split the received data into individual values
                             String[] values = data.split(",");
                             // Check if the array has at least three elements
-                            if (values.length >= 1) {
+                            if (values.length >= 1 && !values[0].equals("nan") && !values[1].equals("nan") && !values[2].equals("nan")) {
                                 // Get current date and time
                                 LocalDateTime currentTime = LocalDateTime.now();
                                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                                 String request= makeJsonString(values);
                                 HTTPPOST httppost= new HTTPPOST(request);
-                                Logging.msg(httppost.getResponse());
+                                //Logging.msg(httppost.getResponse());
 
                             } else {
                                 Logging.msg("Invalid data format: " + data);
@@ -146,7 +146,7 @@ public class RemoteConnection extends Thread {
                     // At the end of the data flow, the connection is closed.
                     connection.close();
                     Logging.msg(
-                            "The connection between " + localDevice + " and " + remoteDevice + " has been closed."
+                            "The connection between " + localDevice.getBluetoothAddress() + " (base station) and " + remoteDevice + " has been closed."
                     );
 
 //                } catch (InterruptedException e) {

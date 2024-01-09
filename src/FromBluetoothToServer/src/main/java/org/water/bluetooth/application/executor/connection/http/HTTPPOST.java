@@ -1,17 +1,10 @@
 package org.water.bluetooth.application.executor.connection.http;
 
-import org.water.bluetooth.application.utils.Logging;
-
-import javax.net.ssl.HttpsURLConnection;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 /**
  * The HTTPPOST class represents an HTTP POST request thread that sends data received from a remote device via Bluetooth
@@ -30,7 +23,7 @@ import java.nio.charset.StandardCharsets;
  * @author fnicoletti
  */
 public class HTTPPOST extends Thread {
-    private String url="http://localhost:8081/api/misuration";
+    private String url="http://51.178.47.2:8081/api/misuration";
     private String data;
     private String response;
 
@@ -46,9 +39,10 @@ public class HTTPPOST extends Thread {
                 .header("Content-Type","application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(data))
                 .build();
-        System.out.println(data);
+        String serialNumberOfRequest= UUID.randomUUID().toString();
+        System.out.println("Serial number of request: "+serialNumberOfRequest+"  "+data);
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.println(response.statusCode());
+        System.out.println("Serial number of request: "+serialNumberOfRequest+"  "+response.body());
         this.response=response.body();
         } catch (Exception e) {
             e.printStackTrace();

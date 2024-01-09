@@ -37,7 +37,10 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../.." />
+    <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -125,6 +128,9 @@
       <workItem from="1704218486418" duration="1433000" />
       <workItem from="1704228916835" duration="2915000" />
       <workItem from="1704232339546" duration="785000" />
+      <workItem from="1704730699990" duration="4531000" />
+      <workItem from="1704736584653" duration="1377000" />
+      <workItem from="1704808698159" duration="100000" />
     </task>
     <servers />
   </component>
