@@ -1,6 +1,0 @@
-org.water.bluetooth
-org.water.bluetooth.application
-org.water.bluetooth.application.executor
-org.water.bluetooth.application.executor.connection
-org.water.bluetooth.application.executor.connection.http
-org.water.bluetooth.application.utils

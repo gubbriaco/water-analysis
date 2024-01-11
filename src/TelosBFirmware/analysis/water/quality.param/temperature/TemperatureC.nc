@@ -29,8 +29,8 @@ module TemperatureC {
 	uses {
         	interface Boot;
         	interface Leds;
-		interface Read<uint16_t> as Temperaturemeasure;
-    	}
+			interface Read<uint16_t> as Temperaturemeasure;
+    }
 
 }
 

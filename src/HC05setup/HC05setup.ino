@@ -10,11 +10,9 @@ void setup() {
   Serial.begin(9600);
   Serial.println("ready");
   bluetoothSerial.begin(38400);
-
 }
 
 void loop() {
-  
   if(bluetoothSerial.available()) {
     c = bluetoothSerial.read();
     Serial.write(c);
@@ -24,5 +22,4 @@ void loop() {
     c = Serial.read();
     bluetoothSerial.write(c);
   }
-
 }

@@ -30,7 +30,7 @@ module QualityParamC {
         	interface Temperature;
         	interface TDS;
         	interface PH;
-}
+	}
 
 }
 

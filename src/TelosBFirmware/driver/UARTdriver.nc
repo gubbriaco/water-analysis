@@ -100,24 +100,22 @@ implementation {
 	command void Driver.send(uint16_t QualityParameters[NR_QUALITY_PARAMS]) {
 		
 		// Populate DataUart array with quality parameters
-		DataUart[2] = QualityParameters[TEMPERATURE_POS] >> 8; // MSB
-		DataUart[1] = QualityParameters[TEMPERATURE_POS] & 0xff; // LSB
-		DataUart[4] = QualityParameters[TDS_POS] >> 8; // MSB
-		DataUart[3] = QualityParameters[TDS_POS] & 0xff; // LSB
-		DataUart[6] = QualityParameters[PH_POS] >> 8; // MSB
-		DataUart[5] = QualityParameters[PH_POS] & 0xff; // LSB
+		DataUart[2] = QualityParameters[TEMPERATURE_POS] >> 8;
+		DataUart[1] = QualityParameters[TEMPERATURE_POS] & 0xff;
+		DataUart[4] = QualityParameters[TDS_POS] >> 8;
+		DataUart[3] = QualityParameters[TDS_POS] & 0xff;
+		DataUart[6] = QualityParameters[PH_POS] >> 8;
+		DataUart[5] = QualityParameters[PH_POS] & 0xff;
 		
 		// Request the resource before sending data
 		call Resource.request();
 		
-		// Print the data to be sent for debugging
 		printf("data_to_arduino = %d, %d, %d\n", QualityParameters[TEMPERATURE_POS], QualityParameters[TDS_POS], QualityParameters[PH_POS]);
 
-	// Receive acknowledgment from Arduino
+		// Receive acknowledgment from Arduino
 		ArduinoData = receivedData[1] << 8 | receivedData[0];
 		printf("ack = %d\n", ArduinoData);
 
-		// Flush the printf buffer
 		printfflush();
 	
 	}

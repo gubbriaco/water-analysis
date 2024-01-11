@@ -29,8 +29,8 @@ module PHC {
 	uses {
         	interface Boot;
         	interface Leds;
-		interface Read<uint16_t> as PHmeasure;
-    	}
+			interface Read<uint16_t> as PHmeasure;
+    }
 
 }
 
