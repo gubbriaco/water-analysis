@@ -30,9 +30,9 @@ The Water Analysis project is dedicated to monitoring water quality parameters t
 
 5. **Spring Boot Server Setup**: In the `server` directory, find the Java source code for the server.
 
-- **Frontend Setup**: Implemented in the `frontend` directory.
+6. **Frontend Setup**: Implemented in the `frontend` directory.
 
-6. **Additional Configuration**: Execute the AT command `AT+BIND=bluetooth_address`, replacing `bluetooth_address` with the Bluetooth address of the device running the Java Bluetooth Base Station.
+7. **Additional Configuration**: Execute the AT command `AT+BIND=bluetooth_address`, replacing `bluetooth_address` with the Bluetooth address of the device running the Java Bluetooth Base Station.
 
 For detailed information, please contact [giorgioubbriaco@protonmail.com](mailto:giorgioubbriaco@protonmail.com).
 
