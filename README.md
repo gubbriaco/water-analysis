@@ -48,9 +48,9 @@ Explore the `docs/` folder for datasheets related to sensors and boards employed
 
 - `src/FromBluetoothToServer/`: Java source code for the Bluetooth Base Station.
   
-- `src/FromTelosBToUART/`: nesC source code for TelosB, collecting measurements and sending data via UART to Arduino.
+- `src/TelosBFirmware/`: nesC source code for TelosB, collecting measurements and sending data via UART to Arduino.
   
-- `src/FromUartToBluetooth/`: Arduino source code receiving data via UART and transmitting it to the Bluetooth server using HC-05.
+- `src/ArduinoFirmware/`: Arduino source code receiving data via UART and transmitting it to the Bluetooth server using HC-05.
 
 - `src/HC05setup/`: Arduino source code for the initial configuration of the HC-05 using AT commands.
 
