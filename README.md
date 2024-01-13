@@ -3,6 +3,7 @@
 ## Overview
 
 The Water Analysis project is dedicated to monitoring water quality parameters through the integration of a TelosB device, DS18B20 temperature sensor, TDS sensor, Arduino, and a platform (either a small computer or a specialized board) hosting a Bluetooth server. The TelosB is responsible for data collection from the sensors, transmitting it to the Arduino via UART. Subsequently, the Arduino, equipped with an HC-05 module, communicates the data via Bluetooth to a Java-based Bluetooth Base Station using the BlueCove library. Finally, HTTP requests will be made to a server considering the data collected from the Base Station.
+![Design Concept](https://github.com/gubbriaco/water-analysis/assets/101352023/5ae3e3ae-728e-4988-86c5-d189b166aefc)
 
 ## Project Components
 
