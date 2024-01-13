@@ -18,6 +18,7 @@ The Water Analysis project is dedicated to monitoring water quality parameters t
 - **Spring BootServer (Java)**: Implemented in the `server` directory. Handles HTTP requests from the Bluetooth Base Station.
 
 - **Frontend**: Implemented in the `frontend` directory. Make HTTP requests for recovery device data and misuration. These data is shown via cards.
+
 ![Hardware Design](https://github.com/gubbriaco/water-analysis/assets/101352023/75458248-455f-4796-90b0-874903a72a2a)
 ![Software Design](https://github.com/gubbriaco/water-analysis/assets/101352023/be7cc825-eddc-4ece-a8ce-060e8421c4a8)
 ![Web App UI](https://github.com/gubbriaco/water-analysis/assets/101352023/e574baed-cef4-480e-b041-66497250731d)
